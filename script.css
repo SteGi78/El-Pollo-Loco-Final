@@ -1,0 +1,242 @@
+/* ===============================
+   El Pollo Loco – script.css (final)
+   =============================== */
+
+/* Schrift */
+@font-face {
+  font-family: "zabras";
+  src: url("./fonts/zabras.ttf") format("truetype");
+  font-display: swap;
+}
+
+/* Basislayout */
+* { box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+}
+
+body {
+  font-family: 'zabras', Arial, Helvetica, sans-serif;
+  margin: 0;
+  min-height: 100vh;
+  background: #0d0d0d;        /* neutral, kein Seiten-BG-Bild */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow-x: hidden;
+  color: #222;
+}
+
+/* Hauptbereich */
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  max-width: 100vw;
+  min-height: 94vh;           /* mittig ausrichten */
+  padding: 12px;
+}
+
+/* === SPIELBEREICH (Wrapper + Canvas) ================== */
+
+/* 16:9 Wrapper: skaliert responsiv, hält Verhältnis stabil */
+.epl-wrap {
+  position: relative;
+  width: min(96vw, 1280px);
+  aspect-ratio: 16 / 9;
+  background: #000;           /* Fallback bis erste Szene gezeichnet ist */
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0,0,0,.45);
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+}
+
+/* Canvas füllt den Wrapper; Schärfe kommt durch js/dpi.js */
+#canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  image-rendering: pixelated;
+}
+
+#canvas:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px #ff9a3c;
+}
+
+/* Falls irgendwo noch globale Canvas-Regeln aktiv sind – neutralisieren */
+body > main > canvas {
+  all: unset;
+  display: block;
+}
+
+/* === OVERLAYS (Start / Game Over / Dialoge) ============ */
+
+/* Startscreen: Grafik als Hintergrund, UI-Inhalt separat */
+#startScreen {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+
+  background:
+    url("img/9_intro_outro_screens/start/startscreen_1.png")
+    center/cover no-repeat,
+    rgba(255,255,255,0.00);
+  z-index: 100;
+}
+
+#startScreen .screen__inner {
+  background: rgba(255,255,255,0.88);
+  border-radius: 16px;
+  padding: 24px 32px;
+  color: #3b2c11;
+  text-align: center;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+}
+
+/* Game Over: Bild statt Text – Text bleibt für Screenreader */
+#gameOverScreen {
+  position: absolute;
+  inset: 0;
+  display: none;  /* wird im Spiel sichtbar geschaltet */
+  background:
+    url("img/9_intro_outro_screens/game_over/game over.png")
+    center/contain no-repeat,
+    rgba(0,0,0,0.35);          /* leichte Abdunklung */
+  z-index: 110;
+  text-indent: -9999px;        /* Text visuell ausblenden */
+}
+
+/* Generische Screen-Klasse (falls an anderen Stellen genutzt) */
+.screen {
+  /* Positionierung/Look werden für start/gameOver oben gesetzt */
+  pointer-events: auto;
+}
+
+/* Native <dialog> für Anleitung */
+dialog#instructionsDialog {
+  border: none;
+  border-radius: 12px;
+  padding: 16px 22px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.25);
+}
+
+/* === ROTATE NOTICE ===================================== */
+
+#rotateNotice {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: #000;
+  color: #fff;
+  font-size: 2rem;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* Im Hochformat Spiel ausblenden, Hinweis zeigen */
+@media (orientation: portrait) {
+  main { display: none; }
+  #rotateNotice { display: flex; }
+}
+
+/* === UI: Buttons, Footer ================================= */
+
+.ui-btn {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  background: #fff;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,.2);
+}
+
+footer {
+  margin-top: 8px;
+  font-size: 12px;
+  opacity: .75;
+}
+
+footer a {
+  color: #7aa2ff;
+  text-decoration: none;
+}
+footer a:hover { text-decoration: underline; }
+
+/* === Mobile Controls ===================================== */
+
+#mobileControls {
+  display: none;              /* per Media Query sichtbar */
+  position: fixed;
+  bottom: 24px;
+  left: 0;
+  width: 100%;
+  justify-content: center;
+  gap: 14px;
+  z-index: 120;               /* über Canvas */
+}
+
+.mc-btn {
+  background: #fff;
+  border: none;
+  font-size: 2rem;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  box-shadow: 0 4px 8px rgba(0,0,0,.2);
+  cursor: pointer;
+}
+
+button { cursor: pointer; }
+
+/* Mobil sichtbar machen */
+@media (max-width: 850px) {
+  #mobileControls { display: flex; }
+}
+
+/* === Responsive Feinjustierung ============================ */
+
+@media (max-width: 900px) {
+  #startScreen .screen__inner {
+    padding: 18px 8vw;
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 600px) {
+  #startScreen .screen__inner {
+    font-size: 1rem;
+    padding: 10px 2vw;
+  }
+}
+
+/* Standard: jedes [hidden]-Element verschwindet */
+[hidden] { display: none !important; }
+
+/* Screenreader-only Hilfsklasse */
+.sr-only{
+  position:absolute !important;
+  width:1px !important;
+  height:1px !important;
+  padding:0 !important;
+  margin:-1px !important;
+  overflow:hidden !important;
+  clip:rect(0,0,0,0) !important;
+  white-space:nowrap !important;
+  border:0 !important;
+}
+
+
+/* Ende */
