@@ -1,35 +1,33 @@
-/* ===============================
-   El Pollo Loco – script.css (final)
-   =============================== */
+/* ============================================
+   El Pollo Loco – script.css (FINAL)
+   ============================================ */
 
-/* Schrift */
 @font-face {
   font-family: "zabras";
   src: url("./fonts/zabras.ttf") format("truetype");
   font-display: swap;
 }
 
-/* Basislayout */
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
-html, body {
+html,
+body.game-page {
   height: 100%;
 }
 
-body {
-  font-family: 'zabras', Arial, Helvetica, sans-serif;
+body.game-page {
   margin: 0;
-  min-height: 100vh;
-  background: #0d0d0d;        /* neutral, kein Seiten-BG-Bild */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  background: #0d0d0d;
+  display: grid;
+  place-items: center;
   overflow-x: hidden;
-  color: #222;
+  overflow-y: auto;
+  font-family: 'zabras', Arial, Helvetica, sans-serif;
+  color: #fff;
 }
 
-/* Hauptbereich */
 main {
   display: flex;
   flex-direction: column;
@@ -38,18 +36,16 @@ main {
 
   width: 100%;
   max-width: 100vw;
-  min-height: 94vh;           /* mittig ausrichten */
+  min-height: 94vh;
   padding: 12px;
 }
 
-/* === SPIELBEREICH (Wrapper + Canvas) ================== */
-
-/* 16:9 Wrapper: skaliert responsiv, hält Verhältnis stabil */
+/* SPIELBEREICH */
 .epl-wrap {
   position: relative;
   width: min(96vw, 1280px);
   aspect-ratio: 16 / 9;
-  background: #000;           /* Fallback bis erste Szene gezeichnet ist */
+  background: #000;
   border-radius: 12px;
   box-shadow: 0 8px 30px rgba(0,0,0,.45);
   overflow: hidden;
@@ -57,79 +53,180 @@ main {
   place-items: center;
 }
 
-/* Canvas füllt den Wrapper; Schärfe kommt durch js/dpi.js */
 #canvas {
   width: 100%;
   height: 100%;
   display: block;
   image-rendering: pixelated;
+  outline: none;
 }
 
 #canvas:focus {
-  outline: none;
   box-shadow: 0 0 0 3px #ff9a3c;
 }
 
-/* Falls irgendwo noch globale Canvas-Regeln aktiv sind – neutralisieren */
-body > main > canvas {
+body.game-page > main > canvas {
   all: unset;
   display: block;
 }
 
-/* === OVERLAYS (Start / Game Over / Dialoge) ============ */
-
-/* Startscreen: Grafik als Hintergrund, UI-Inhalt separat */
-#startScreen {
+/* OVERLAYS / SCREENS */
+.screen {
   position: absolute;
   inset: 0;
   display: grid;
   place-items: center;
-
-  background:
-    url("img/9_intro_outro_screens/start/startscreen_1.png")
-    center/cover no-repeat,
-    rgba(255,255,255,0.00);
+  pointer-events: auto;
   z-index: 100;
 }
 
+/* Startscreen Hintergrund */
+#startScreen {
+  background:
+    url("img/9_intro_outro_screens/start/startscreen_1.png")
+    center / cover no-repeat,
+    rgba(255,255,255,0.00);
+}
+
 #startScreen .screen__inner {
-  background: rgba(255,255,255,0.88);
+  background: rgba(255,255,255,0.94);
   border-radius: 16px;
   padding: 24px 32px;
   color: #3b2c11;
   text-align: center;
   box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+
+  font-family: Arial, Helvetica, sans-serif;
+  max-width: min(90%, 400px);
+  line-height: 1.4;
+  border: 1px solid rgba(0,0,0,0.08);
+  backdrop-filter: blur(2px);
 }
 
-/* Game Over: Bild statt Text – Text bleibt für Screenreader */
+/* Buttons-Gruppe im Startscreen */
+.start-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin: 16px 0;
+}
+
+#startScreen .screen__inner h1 {
+  font-family: 'zabras', Arial, Helvetica, sans-serif;
+  margin-top: 0;
+  margin-bottom: 16px;
+  font-size: 1.2rem;
+  line-height: 1.2;
+}
+
+.start-hint {
+  font-size: 0.8rem;
+  opacity: 0.8;
+  margin-top: 16px;
+}
+
+/* Start-Fenster an Desktop nach rechts/oben verschieben,
+   damit es nicht über der großen EL POLLO LOCO Schrift sitzt */
+@media (min-width: 900px) {
+  #startScreen .screen__inner {
+    justify-self: end;
+    align-self: start;
+    margin-top: 4vh;
+    margin-right: 4vw;
+    max-width: 300px;
+  }
+}
+
+#startScreen .screen__inner button {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.9rem;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+
+/* Game Over Screen */
 #gameOverScreen {
   position: absolute;
   inset: 0;
-  display: none;  /* wird im Spiel sichtbar geschaltet */
+  display: none;
   background:
     url("img/9_intro_outro_screens/game_over/game over.png")
-    center/contain no-repeat,
-    rgba(0,0,0,0.35);          /* leichte Abdunklung */
+    center / contain no-repeat,
+    rgba(0,0,0,0.35);
   z-index: 110;
-  text-indent: -9999px;        /* Text visuell ausblenden */
+
+  text-indent: -9999px;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
-/* Generische Screen-Klasse (falls an anderen Stellen genutzt) */
-.screen {
-  /* Positionierung/Look werden für start/gameOver oben gesetzt */
-  pointer-events: auto;
+#gameOverScreen .screen__inner {
+  background: rgba(0,0,0,0.6);
+  color: #fff;
+  border-radius: 12px;
+  padding: 20px 24px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.5);
+
+  text-indent: 0;
+  white-space: normal;
+  overflow: visible;
+
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: center;
+  max-width: 320px;
 }
 
-/* Native <dialog> für Anleitung */
+#gameOverScreen .screen__inner h2 {
+  font-family: 'zabras', Arial, Helvetica, sans-serif;
+  margin: 0 0 12px 0;
+  font-size: 1.4rem;
+  line-height: 1.2;
+}
+
+.gameover-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+#gameOverScreen .screen__inner button {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.9rem;
+  cursor: pointer;
+  padding: 6px 10px;
+}
+
+/* Dialog (Anleitung) */
 dialog#instructionsDialog {
   border: none;
   border-radius: 12px;
   padding: 16px 22px;
   box-shadow: 0 8px 32px rgba(0,0,0,.25);
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.4;
+  max-width: min(90%, 360px);
 }
 
-/* === ROTATE NOTICE ===================================== */
+dialog#instructionsDialog h2 {
+  font-family: 'zabras', Arial, Helvetica, sans-serif;
+  font-size: 1.2rem;
+  line-height: 1.2;
+  margin-top: 0;
+  margin-bottom: 12px;
+  color: #000;
+}
 
+dialog#instructionsDialog button {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.9rem;
+  cursor: pointer;
+  margin-top: 12px;
+  padding: 6px 10px;
+}
+
+/* ROTATE NOTICE */
 #rotateNotice {
   display: none;
   position: fixed;
@@ -137,19 +234,26 @@ dialog#instructionsDialog {
   background: #000;
   color: #fff;
   font-size: 2rem;
+  line-height: 1.4;
+  text-align: center;
+  padding: 2rem;
   align-items: center;
   justify-content: center;
   z-index: 1000;
+  font-family: Arial, Helvetica, sans-serif;
+  pointer-events: none;
 }
 
-/* Im Hochformat Spiel ausblenden, Hinweis zeigen */
 @media (orientation: portrait) {
-  main { display: none; }
-  #rotateNotice { display: flex; }
+  main {
+    display: none;
+  }
+  #rotateNotice {
+    display: flex;
+  }
 }
 
-/* === UI: Buttons, Footer ================================= */
-
+/* UI BUTTON (Mute) */
 .ui-btn {
   position: fixed;
   top: 16px;
@@ -161,31 +265,49 @@ dialog#instructionsDialog {
   padding: 8px 12px;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0,0,0,.2);
+  line-height: 1;
+  z-index: 120;
 }
 
+.ui-btn:focus {
+  outline: 2px solid #ff9a3c;
+  outline-offset: 2px;
+}
+
+/* FOOTER */
 footer {
   margin-top: 8px;
   font-size: 12px;
   opacity: .75;
+  font-family: Arial, Helvetica, sans-serif;
+  color: rgba(255,255,255,0.75);
+  text-align: center;
+  position: relative;
+  z-index: 5;
 }
 
 footer a {
   color: #7aa2ff;
   text-decoration: none;
 }
-footer a:hover { text-decoration: underline; }
+footer a:hover {
+  text-decoration: underline;
+}
 
-/* === Mobile Controls ===================================== */
-
+/* MOBILE CONTROLS */
 #mobileControls {
-  display: none;              /* per Media Query sichtbar */
+  display: none;
   position: fixed;
   bottom: 24px;
   left: 0;
   width: 100%;
   justify-content: center;
   gap: 14px;
-  z-index: 120;               /* über Canvas */
+  z-index: 120;
+}
+
+#mobileControls:empty {
+  display: none;
 }
 
 .mc-btn {
@@ -197,46 +319,61 @@ footer a:hover { text-decoration: underline; }
   border-radius: 50%;
   box-shadow: 0 4px 8px rgba(0,0,0,.2);
   cursor: pointer;
+  line-height: 1;
 }
 
-button { cursor: pointer; }
+.mc-btn:focus {
+  outline: 2px solid #ff9a3c;
+  outline-offset: 2px;
+}
 
-/* Mobil sichtbar machen */
+button {
+  cursor: pointer;
+}
+
 @media (max-width: 850px) {
-  #mobileControls { display: flex; }
+  #mobileControls {
+    display: flex;
+  }
 }
 
-/* === Responsive Feinjustierung ============================ */
-
+/* RESPONSIVE FINETUNE */
 @media (max-width: 900px) {
   #startScreen .screen__inner {
     padding: 18px 8vw;
-    font-size: 1.2rem;
+    font-size: 1rem;
+    max-width: min(90%, 400px);
+    margin: 0;
+    justify-self: center;
+    align-self: center;
   }
 }
 
 @media (max-width: 600px) {
   #startScreen .screen__inner {
-    font-size: 1rem;
+    font-size: 0.95rem;
     padding: 10px 2vw;
   }
 }
 
-/* Standard: jedes [hidden]-Element verschwindet */
-[hidden] { display: none !important; }
-
-/* Screenreader-only Hilfsklasse */
-.sr-only{
-  position:absolute !important;
-  width:1px !important;
-  height:1px !important;
-  padding:0 !important;
-  margin:-1px !important;
-  overflow:hidden !important;
-  clip:rect(0,0,0,0) !important;
-  white-space:nowrap !important;
-  border:0 !important;
+/* UTILS */
+[hidden] {
+  display: none !important;
 }
 
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0,0,0,0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
 
-/* Ende */
+body.game-page::before,
+body.game-page::after {
+  content: none !important;
+}
