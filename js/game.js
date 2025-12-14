@@ -6,7 +6,11 @@ const isMobileDevice = window.innerWidth <= 1368;
 
 // init muss im globalen Scope liegen
 window.init = function(restart = false) {
-    if (restart) resetGame();
+    if (restart) {
+        resetGame();
+    } else {
+        stopCurrentWorld();
+    }
     initLevel();
     canvas = document.getElementById("canvas");
     world = new World(canvas, keyboard);
@@ -26,7 +30,14 @@ function showStartScreen() {
     document.getElementById("startScreen").style.display = "block";
 }
 function resetGame() {
+    stopCurrentWorld();
     keyboard = new Keyboard();
+}
+function stopCurrentWorld() {
+    if (world && typeof world.destroy === 'function') {
+        world.destroy();
+    }
+    world = null;
 }
 function adjustControls() {
     const mobileControls = document.getElementById('mobileControls');

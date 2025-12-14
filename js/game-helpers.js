@@ -33,7 +33,7 @@ function restartGame() {
 
   // init() muss im Projekt existieren und eine frische Spielwelt aufbauen
   if (typeof init === 'function') {
-    init();
+    init(true);
   }
 }
 
@@ -46,6 +46,10 @@ function restartGame() {
 function returnToMenu() {
   const over = document.getElementById('gameOverScreen');
   hideElement(over);
+
+  if (typeof stopCurrentWorld === 'function') {
+    stopCurrentWorld();
+  }
 
   const start = document.getElementById('startScreen');
   showElementGrid(start);
