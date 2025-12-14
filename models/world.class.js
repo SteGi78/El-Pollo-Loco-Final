@@ -20,6 +20,7 @@ class World {
     cam_x = -100;
     runInterval = null;
     requestId = null;
+    isDestroyed = false;
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext("2d");
@@ -34,6 +35,7 @@ class World {
      * Function to draw the entire game.
      */
     draw() {
+        if (this.isDestroyed) return;
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.ctx.translate(this.cam_x, 0);
         this.drawBasicObjs();
@@ -41,10 +43,9 @@ class World {
         this.drawEnemies();
         this.drawCollectableObjs();
         this.ctx.translate(-this.cam_x, 0);
-        let self = this;
-        this.requestId = requestAnimationFrame(function () {
-            self.draw();
-            self.checkOtherDirection();
+        this.requestId = requestAnimationFrame(() => {
+            this.draw();
+            this.checkOtherDirection();
         });
     }
 
@@ -177,6 +178,35 @@ class World {
             this.collectingCoin();
             this.checkBossEscaping();
         }, 1000 / 60);
+    }
+
+    /**
+     * Stops animation and interval loops to prevent multiple worlds running.
+     */
+    stopLoops() {
+        if (this.requestId) {
+            cancelAnimationFrame(this.requestId);
+            this.requestId = null;
+        }
+        if (this.runInterval) {
+            clearInterval(this.runInterval);
+            this.runInterval = null;
+        }
+    }
+
+    /**
+     * Cleanly tear down the world and its entities.
+     */
+    destroy() {
+        this.isDestroyed = true;
+        this.stopLoops();
+        this.destroyClouds();
+        this.destroyCoins();
+        this.destroyThrowableObject();
+        this.destroyLevelEnemies();
+        if (this.level?.endboss?.[0]?.destructor) {
+            this.level.endboss[0].destructor();
+        }
     }
 
     /**
@@ -378,6 +408,7 @@ class World {
      * @param {boolean} win - The value is true when end boss is dead.
      */
     gameOver(win = true) {
+        this.isDestroyed = true;
         this.character.speed = 0;
         this.character.stopAnimation();
         this.level.endboss[0].speed = 0;
@@ -387,8 +418,7 @@ class World {
         this.destroyCoins();
         this.destroyThrowableObject();
         this.destroyLevelEnemies();
-        clearInterval(this.runInterval);
-        this.runInterval = null;
+        this.stopLoops();
         this.gameOverCelebration(win);
         showGameOverScreen(win);
     }
