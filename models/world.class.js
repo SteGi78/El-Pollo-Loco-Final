@@ -419,6 +419,7 @@ class World {
         this.destroyThrowableObject();
         this.destroyLevelEnemies();
         this.stopLoops();
+        pauseAllSounds();
         this.gameOverCelebration(win);
         showGameOverScreen(win);
     }
