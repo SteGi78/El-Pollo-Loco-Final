@@ -77,15 +77,22 @@ function updateOrientationLock() {
   if (!rotateNotice || !main) return;
 
   if (portrait && isSmallViewport) {
+    if (rotateNotice && !rotateNotice.hasAttribute('tabindex')) {
+      rotateNotice.setAttribute('tabindex', '-1');
+    }
     document.body.classList.add('is-portrait-lock');
     rotateNotice.hidden = false;
     rotateNotice.setAttribute('aria-hidden', 'false');
     main.setAttribute('aria-hidden', 'true');
+    setInert(main, true);
+    blurIfContainsActiveElement(main);
+    rotateNotice?.focus({ preventScroll: true });
   } else {
     document.body.classList.remove('is-portrait-lock');
     rotateNotice.hidden = true;
     rotateNotice.setAttribute('aria-hidden', 'true');
     main.setAttribute('aria-hidden', 'false');
+    setInert(main, false);
   }
 }
 
