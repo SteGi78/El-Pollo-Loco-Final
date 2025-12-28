@@ -56,7 +56,7 @@ function bindMobileControls() {
   press(btnLeft,   'LEFT');
   press(btnRight,  'RIGHT');
   press(btnJump,   'UP');
-  press(btnAction, 'THROW');
+  press(btnAction, 'D');
 }
 
 // beim Laden initialisieren
