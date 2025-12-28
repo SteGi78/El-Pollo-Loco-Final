@@ -30,6 +30,7 @@ function showElementGrid(el) {
 function restartGame() {
   const over = document.getElementById('gameOverScreen');
   hideElement(over);
+  pauseAllSounds(true);
 
   // init() muss im Projekt existieren und eine frische Spielwelt aufbauen
   if (typeof init === 'function') {
@@ -46,6 +47,7 @@ function restartGame() {
 function returnToMenu() {
   const over = document.getElementById('gameOverScreen');
   hideElement(over);
+  pauseAllSounds(true);
 
   if (typeof stopCurrentWorld === 'function') {
     stopCurrentWorld();

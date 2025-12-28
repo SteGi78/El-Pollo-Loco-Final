@@ -1,23 +1,32 @@
+function ensureKeyboard() {
+  if (!window.keyboard) {
+    window.keyboard = new Keyboard();
+  }
+  return window.keyboard;
+}
 
 window.addEventListener("keydown", (event) => {
-    let handled = false;
-    switch(event.code) {
-        case 'ArrowUp': keyboard.UP = true; handled = true; break;
-        case 'ArrowDown': keyboard.DOWN = true; handled = true; break;
-        case 'ArrowLeft': keyboard.LEFT = true; handled = true; break;
-        case 'ArrowRight': keyboard.RIGHT = true; handled = true; break;
-        case 'Space': keyboard.SPACE = true; handled = true; break;
-        case 'KeyD': keyboard.D = true; handled = true; break;
-    }
-    if (handled) event.preventDefault();
+  const kb = ensureKeyboard();
+  let handled = false;
+  switch(event.code) {
+    case 'ArrowUp': kb.UP = true; handled = true; break;
+    case 'ArrowDown': kb.DOWN = true; handled = true; break;
+    case 'ArrowLeft': kb.LEFT = true; handled = true; break;
+    case 'ArrowRight': kb.RIGHT = true; handled = true; break;
+    case 'Space': kb.SPACE = true; handled = true; break;
+    case 'KeyD': kb.D = true; handled = true; break;
+  }
+  if (handled) event.preventDefault();
 });
+
 window.addEventListener("keyup", (event) => {
-    switch(event.code) {
-        case 'ArrowUp': keyboard.UP = false; break;
-        case 'ArrowDown': keyboard.DOWN = false; break;
-        case 'ArrowLeft': keyboard.LEFT = false; break;
-        case 'ArrowRight': keyboard.RIGHT = false; break;
-        case 'Space': keyboard.SPACE = false; break;
-        case 'KeyD': keyboard.D = false; break;
-    }
+  const kb = ensureKeyboard();
+  switch(event.code) {
+    case 'ArrowUp': kb.UP = false; break;
+    case 'ArrowDown': kb.DOWN = false; break;
+    case 'ArrowLeft': kb.LEFT = false; break;
+    case 'ArrowRight': kb.RIGHT = false; break;
+    case 'Space': kb.SPACE = false; break;
+    case 'KeyD': kb.D = false; break;
+  }
 });
