@@ -4,7 +4,8 @@ Dies ist die aufbereitete Fassung für Abgabe / Bewerbung.
 
 ## Enthalten
 - index.html (Landingpage, Spielbühne, Overlays, Mobile-Controls, Mute-Button)
-- script.css (Responsive Layout, Accessibility, Mobile Querformat Lock)
+- style/style.css (Responsive Layout, Accessibility, Mobile Querformat Lock)
+- classes/… (alle class.js Dateien des Spiels)
 - js/sounds.js (Mute-Handling inkl. localStorage)
 - js/mobile-controls.js (Touch-Steuerung für Smartphone/Tablet)
 - js/game-helpers.js (restartGame(), returnToMenu())

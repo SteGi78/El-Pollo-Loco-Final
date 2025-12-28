@@ -10,6 +10,8 @@
 
 function hideElement(el) {
   if (!el) return;
+  setInert(el, true);
+  blurIfContainsActiveElement(el);
   el.hidden = true;
   el.setAttribute('aria-hidden', 'true');
   el.style.display = 'none';
@@ -17,6 +19,7 @@ function hideElement(el) {
 
 function showElementGrid(el) {
   if (!el) return;
+  setInert(el, false);
   el.hidden = false;
   el.setAttribute('aria-hidden', 'false');
   el.style.display = 'grid';
@@ -55,6 +58,33 @@ function returnToMenu() {
 
   const start = document.getElementById('startScreen');
   showElementGrid(start);
+}
+
+/**
+ * Entfernt Fokus, falls er innerhalb eines ausgeblendeten Elements liegt.
+ * @param {HTMLElement} el
+ */
+function blurIfContainsActiveElement(el) {
+  const active = document.activeElement;
+  if (active && el.contains(active) && typeof active.blur === 'function') {
+    active.blur();
+  }
+}
+
+/**
+ * Setzt inert-Status, damit versteckte Overlays nicht fokussierbar sind.
+ * @param {HTMLElement} el
+ * @param {boolean} value
+ */
+function setInert(el, value) {
+  if (!el) return;
+  if (value) {
+    el.setAttribute('inert', '');
+    el.inert = true;
+  } else {
+    el.removeAttribute('inert');
+    el.inert = false;
+  }
 }
 
 // global verfügbar machen

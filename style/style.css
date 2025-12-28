@@ -1,10 +1,10 @@
 /* ============================================
-   El Pollo Loco – script.css (FINAL)
+   El Pollo Loco – style.css (FINAL)
    ============================================ */
 
 @font-face {
   font-family: "zabras";
-  src: url("./fonts/zabras.ttf") format("truetype");
+  src: url("../fonts/zabras.ttf") format("truetype");
   font-display: swap;
 }
 
@@ -76,28 +76,41 @@ body.game-page > main > canvas {
   inset: 0;
   display: grid;
   place-items: center;
+  align-items: center;
+  justify-items: center;
+  padding: clamp(12px, 3vw, 28px);
+  overflow: auto;
   pointer-events: auto;
   z-index: 100;
+}
+
+.screen__inner {
+  width: min(92vw, 720px);
+  max-height: min(86vh, 720px);
+  overflow-y: auto;
+  padding: clamp(14px, 3vw, 28px);
+  border-radius: 16px;
+  scrollbar-width: thin;
 }
 
 /* Startscreen Hintergrund */
 #startScreen {
   background:
-    url("img/9_intro_outro_screens/start/startscreen_1.png")
+    url("../img/9_intro_outro_screens/start/startscreen_1.png")
     center / cover no-repeat,
     rgba(255,255,255,0.00);
 }
 
 #startScreen .screen__inner {
   background: rgba(255,255,255,0.94);
-  border-radius: 16px;
-  padding: 24px 32px;
+  padding: clamp(18px, 3vw, 32px);
   color: #3b2c11;
   text-align: center;
   box-shadow: 0 8px 32px rgba(0,0,0,0.15);
 
   font-family: Arial, Helvetica, sans-serif;
   max-width: min(90%, 400px);
+  max-height: min(78vh, 580px);
   line-height: 1.4;
   border: 1px solid rgba(0,0,0,0.08);
   backdrop-filter: blur(2px);
@@ -151,7 +164,7 @@ body.game-page > main > canvas {
   inset: 0;
   display: none;
   background:
-    url("img/9_intro_outro_screens/game_over/game over.png")
+    url("../img/9_intro_outro_screens/game_over/game over.png")
     center / contain no-repeat,
     rgba(0,0,0,0.35);
   z-index: 110;
@@ -167,6 +180,8 @@ body.game-page > main > canvas {
   border-radius: 12px;
   padding: 20px 24px;
   box-shadow: 0 8px 24px rgba(0,0,0,.5);
+  max-height: min(80vh, 420px);
+  width: min(92vw, 340px);
 
   text-indent: 0;
   white-space: normal;
@@ -206,7 +221,9 @@ dialog#instructionsDialog {
   box-shadow: 0 8px 32px rgba(0,0,0,.25);
   font-family: Arial, Helvetica, sans-serif;
   line-height: 1.4;
-  max-width: min(90%, 360px);
+  max-width: min(92vw, 420px);
+  max-height: min(84vh, 640px);
+  overflow-y: auto;
 }
 
 dialog#instructionsDialog h2 {
@@ -233,10 +250,10 @@ dialog#instructionsDialog button {
   inset: 0;
   background: #000;
   color: #fff;
-  font-size: 2rem;
+  font-size: clamp(1.4rem, 4vw, 2.2rem);
   line-height: 1.4;
   text-align: center;
-  padding: 2rem;
+  padding: max(1.5rem, env(safe-area-inset-top)) clamp(1rem, 4vw, 3rem) max(2rem, env(safe-area-inset-bottom));
   align-items: center;
   justify-content: center;
   z-index: 1000;
@@ -297,11 +314,12 @@ footer a:hover {
 #mobileControls {
   display: none;
   position: fixed;
-  bottom: 24px;
+  bottom: max(16px, env(safe-area-inset-bottom));
   left: 0;
   width: 100%;
   justify-content: center;
-  gap: 14px;
+  gap: clamp(10px, 3vw, 18px);
+  padding: 0 clamp(12px, 4vw, 32px);
   z-index: 120;
 }
 
