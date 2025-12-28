@@ -1,0 +1,40 @@
+/* ============================================
+   El Pollo Loco – base.css
+   Basis: Font, Reset/Box-Sizing, Grund-Typo
+   ============================================ */
+
+@font-face {
+  font-family: "zabras";
+  src: url("../fonts/zabras.ttf") format("truetype");
+  font-display: swap;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body.game-page {
+  height: 100%;
+}
+
+html {
+  overflow: hidden;
+}
+
+body.game-page {
+  margin: 0;
+  background: #0d0d0d;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  overscroll-behavior: none;
+  min-height: 100dvh;
+  /* Einheitliche UI-Schrift: gleiche Schrift wie "Willkommen bei El Pollo Loco!" */
+  font-family: "zabras", Arial, Helvetica, sans-serif;
+  color: #fff;
+}
+
+button {
+  cursor: pointer;
+}

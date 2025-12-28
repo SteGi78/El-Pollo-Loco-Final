@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="de" translate="no">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta
+      name="description"
+      content="El Pollo Loco – Jump & Run Game. Sammle Flaschen, weiche den Hühnern aus, und besiege den Endboss."
+    />
+    <title>El Pollo Loco</title>
+
+    <link
+      rel="icon"
+      href="./img/7_statusbars/3_icons/icon_salsa_bottle.png"
+      type="image/png"
+    />
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/layout.css" />
+    <link rel="stylesheet" href="css/components.css" />
+    <link rel="stylesheet" href="css/utilities.css" />
+    <link rel="stylesheet" href="css/responsive.css" />
+  </head>
+
+  <body class="game-page">
+    <noscript>Bitte JavaScript aktivieren, um El Pollo Loco zu spielen.</noscript>
+
+    <main>
+      <div class="epl-wrap" id="app">
+        <!-- Spielfeld -->
+        <canvas
+          id="canvas"
+          width="720"
+          height="480"
+          tabindex="0"
+          aria-label="Spielfläche"
+        >
+          Dein Browser unterstützt das Canvas-Element nicht. Bitte aktualisiere
+          deinen Browser.
+        </canvas>
+
+        <!-- UI wird aus /templates geladen -->
+        <div id="ui-root"></div>
+
+        <!-- Impressum: genau 1 Button im Startmenü, nicht im laufenden Spiel -->
+        <a
+          id="legalFab"
+          href="impressum.html"
+          target="_blank"
+          rel="noopener"
+          aria-label="Impressum öffnen"
+        >
+          Impressum
+        </a>
+
+        <!-- LIVE-REGION (Screenreader Status) -->
+        <div
+          id="sr-status"
+          class="sr-only"
+          aria-live="polite"
+          aria-atomic="true"
+        ></div>
+      </div>
+    </main>
+
+    <!-- Overlay Root (muss AUSSERHALB von <main> liegen,
+         damit der Rotate-Hinweis auch sichtbar bleibt,
+         wenn <main> im Portrait-Modus ausgeblendet wird) -->
+    <div id="overlay-root"></div>
+
+    <!-- GAME SCRIPTS -->
+    <script src="models/drawable-object.class.js" defer></script>
+    <script src="models/moveable-object.class.js" defer></script>
+    <script src="models/throwable-object.class.js" defer></script>
+    <script src="models/character.class.js" defer></script>
+    <script src="models/chicken.class.js" defer></script>
+    <script src="models/chick.class.js" defer></script>
+    <script src="models/snake.class.js" defer></script>
+    <script src="models/endboss.class.js" defer></script>
+    <script src="models/cloud.class.js" defer></script>
+    <script src="models/background-object.class.js" defer></script>
+    <script src="models/bottle.class.js" defer></script>
+    <script src="models/coin.class.js" defer></script>
+    <script src="models/status-bar.class.js" defer></script>
+    <script src="models/bottle-bar.class.js" defer></script>
+    <script src="models/coin-bar.class.js" defer></script>
+    <script src="models/endboss-bar.class.js" defer></script>
+    <script src="models/keyboard.class.js" defer></script>
+    <script src="models/world.class.js" defer></script>
+    <script src="models/level.class.js" defer></script>
+
+    <script src="levels/level1.js" defer></script>
+
+    <!-- Updated helpers -->
+    <script src="js/sounds.js" defer></script>
+    <script src="js/mobile-controls.js" defer></script>
+    <script src="js/game-helpers.js" defer></script>
+
+    <script src="js/preload.js" defer></script>
+
+    <!-- Templates zuerst laden -->
+    <script src="js/templates.js" defer></script>
+
+    <!-- UI-Action Routing (data-action) -->
+    <script src="js/ui-actions.js" defer></script>
+
+    <!-- deine bisherigen Listener + Game Boot -->
+    <script src="js/event-listeners.js" defer></script>
+    <script src="js/game.js" defer></script>
+    <script src="js/ui.js" defer></script>
+    <script src="js/layout-fit.js" defer></script>
+    <script src="js/dpi.js" defer></script>
+  </body>
+</html>

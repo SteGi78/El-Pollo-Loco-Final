@@ -1,0 +1,31 @@
+<section
+  id="startScreen"
+  class="screen"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="startScreenTitle"
+>
+  <div class="screen__inner" role="document">
+    <h1 id="startScreenTitle">Willkommen bei El Pollo Loco!</h1>
+
+    <p>Sammle Flaschen, weiche den Hühnern aus, und besiege den Endboss.</p>
+    <p>
+      In einem Dorf voller verrückter Hühner muss Pepe mit Geschick, Timing und genug
+      Salsa-Flaschen den gackernden Oberboss stoppen. Bist du bereit?
+    </p>
+
+    <div class="start-actions">
+      <button type="button" data-action="open-instructions">Anleitung</button>
+      <button type="button" data-action="start-game">Spiel starten</button>
+      <button type="button" id="fullscreenBtn" data-action="fullscreen">Vollbild</button>
+    </div>
+
+    <p class="start-hint">
+      Tipp: Du kannst auch einfach ins Spielfeld klicken oder tippen, um zu starten.
+    </p>
+
+    <!-- Impressum-Link wird bewusst NICHT im Dialog gezeigt.
+         Stattdessen gibt es genau 1 Button auf der Startseite (siehe #legalFab in index.html).
+         Ingame wird kein Impressum angezeigt. -->
+  </div>
+</section>

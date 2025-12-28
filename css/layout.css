@@ -1,0 +1,75 @@
+/* ============================================
+   El Pollo Loco – layout.css
+   Layout: Bühne, Wrapper, Canvas, Footer
+   ============================================ */
+
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  max-width: 100vw;
+  height: 100dvh;
+  min-height: 100dvh;
+  padding: 12px;
+  overflow: hidden;
+}
+
+/* SPIELBEREICH */
+.epl-wrap {
+  position: relative;
+  /* Nicht nur nach Breite begrenzen, sondern auch nach Höhe,
+     damit auf kleinen Viewports keine Scrollbars entstehen. */
+  width: min(96vw, calc(96dvh * 3 / 2), 1280px);
+  /* Base-Canvas ist 720x480 (=3:2). Verhältnis beibehalten, um Stretching zu vermeiden. */
+  aspect-ratio: 3 / 2;
+  background: #000;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0,0,0,.45);
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+}
+
+#canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  image-rendering: pixelated;
+  outline: none;
+  /* verhindert Scroll/Zoom-Gesten auf Mobile */
+  touch-action: none;
+}
+
+#canvas:focus {
+  box-shadow: 0 0 0 3px #ff9a3c;
+}
+
+/* Sicherheits-Reset, falls irgendwo ein Canvas direkt unter main hängt */
+body.game-page > main > canvas {
+  all: unset;
+  display: block;
+}
+
+/* FOOTER */
+footer {
+  margin-top: 8px;
+  font-size: 12px;
+  opacity: .75;
+  font-family: inherit;
+  color: rgba(255,255,255,0.75);
+  text-align: center;
+  position: relative;
+  z-index: 5;
+}
+
+footer a {
+  color: #7aa2ff;
+  text-decoration: none;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}
