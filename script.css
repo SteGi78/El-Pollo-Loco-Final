@@ -50,6 +50,7 @@ main {
 .epl-wrap {
   position: relative;
   width: min(96vw, 1280px, calc((100vh - 140px) * 16 / 9));
+  max-height: calc(100vh - 80px);
   aspect-ratio: 16 / 9;
   background: #000;
   border-radius: 12px;
@@ -342,6 +343,7 @@ button {
   }
   .epl-wrap {
     width: min(98vw, 1280px, calc((100vh - 120px) * 16 / 9));
+    max-height: calc(100vh - 100px);
   }
 }
 
