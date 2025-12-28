@@ -1,0 +1,396 @@
+/* ============================================
+   El Pollo Loco – script.css (FINAL)
+   ============================================ */
+
+@font-face {
+  font-family: "zabras";
+  src: url("./fonts/zabras.ttf") format("truetype");
+  font-display: swap;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body.game-page {
+  height: 100%;
+}
+
+body.game-page {
+  margin: 0;
+  background: #0d0d0d;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  font-family: 'zabras', Arial, Helvetica, sans-serif;
+  color: #fff;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  max-width: 100vw;
+  min-height: 100vh;
+  padding: 12px;
+  overflow: hidden;
+}
+
+/* SPIELBEREICH */
+.epl-wrap {
+  position: relative;
+  width: min(96vw, 1280px);
+  aspect-ratio: 16 / 9;
+  background: #000;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0,0,0,.45);
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+}
+
+#canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  image-rendering: pixelated;
+  outline: none;
+}
+
+#canvas:focus {
+  box-shadow: 0 0 0 3px #ff9a3c;
+}
+
+body.game-page > main > canvas {
+  all: unset;
+  display: block;
+}
+
+/* OVERLAYS / SCREENS */
+.screen {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  align-items: center;
+  justify-items: center;
+  padding: clamp(12px, 3vw, 28px);
+  overflow: auto;
+  pointer-events: auto;
+  z-index: 100;
+}
+
+.screen__inner {
+  width: min(92vw, 720px);
+  max-height: min(86vh, 720px);
+  overflow-y: auto;
+  padding: clamp(14px, 3vw, 28px);
+  border-radius: 16px;
+  scrollbar-width: thin;
+}
+
+/* Startscreen Hintergrund */
+#startScreen {
+  background:
+    url("img/9_intro_outro_screens/start/startscreen_1.png")
+    center / cover no-repeat,
+    rgba(255,255,255,0.00);
+}
+
+#startScreen .screen__inner {
+  background: rgba(255,255,255,0.94);
+  padding: clamp(18px, 3vw, 32px);
+  color: #3b2c11;
+  text-align: center;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+
+  font-family: Arial, Helvetica, sans-serif;
+  max-width: min(90%, 400px);
+  max-height: min(78vh, 580px);
+  line-height: 1.4;
+  border: 1px solid rgba(0,0,0,0.08);
+  backdrop-filter: blur(2px);
+}
+
+/* Buttons-Gruppe im Startscreen */
+.start-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin: 16px 0;
+}
+
+#startScreen .screen__inner h1 {
+  font-family: 'zabras', Arial, Helvetica, sans-serif;
+  margin-top: 0;
+  margin-bottom: 16px;
+  font-size: 1.2rem;
+  line-height: 1.2;
+}
+
+.start-hint {
+  font-size: 0.8rem;
+  opacity: 0.8;
+  margin-top: 16px;
+}
+
+/* Start-Fenster an Desktop nach rechts/oben verschieben,
+   damit es nicht über der großen EL POLLO LOCO Schrift sitzt */
+@media (min-width: 900px) {
+  #startScreen .screen__inner {
+    justify-self: end;
+    align-self: start;
+    margin-top: 4vh;
+    margin-right: 4vw;
+    max-width: 300px;
+  }
+}
+
+#startScreen .screen__inner button {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.9rem;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+
+/* Game Over Screen */
+#gameOverScreen {
+  position: absolute;
+  inset: 0;
+  display: none;
+  background:
+    url("img/9_intro_outro_screens/game_over/game over.png")
+    center / contain no-repeat,
+    rgba(0,0,0,0.35);
+  z-index: 110;
+
+  text-indent: -9999px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+#gameOverScreen .screen__inner {
+  background: rgba(0,0,0,0.6);
+  color: #fff;
+  border-radius: 12px;
+  padding: 20px 24px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.5);
+  max-height: min(80vh, 420px);
+  width: min(92vw, 340px);
+
+  text-indent: 0;
+  white-space: normal;
+  overflow: visible;
+
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: center;
+  max-width: 320px;
+}
+
+#gameOverScreen .screen__inner h2 {
+  font-family: 'zabras', Arial, Helvetica, sans-serif;
+  margin: 0 0 12px 0;
+  font-size: 1.4rem;
+  line-height: 1.2;
+}
+
+.gameover-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+#gameOverScreen .screen__inner button {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.9rem;
+  cursor: pointer;
+  padding: 6px 10px;
+}
+
+/* Dialog (Anleitung) */
+dialog#instructionsDialog {
+  border: none;
+  border-radius: 12px;
+  padding: 16px 22px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.25);
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.4;
+  max-width: min(92vw, 420px);
+  max-height: min(84vh, 640px);
+  overflow-y: auto;
+}
+
+dialog#instructionsDialog h2 {
+  font-family: 'zabras', Arial, Helvetica, sans-serif;
+  font-size: 1.2rem;
+  line-height: 1.2;
+  margin-top: 0;
+  margin-bottom: 12px;
+  color: #000;
+}
+
+dialog#instructionsDialog button {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.9rem;
+  cursor: pointer;
+  margin-top: 12px;
+  padding: 6px 10px;
+}
+
+/* ROTATE NOTICE */
+#rotateNotice {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: #000;
+  color: #fff;
+  font-size: clamp(1.4rem, 4vw, 2.2rem);
+  line-height: 1.4;
+  text-align: center;
+  padding: max(1.5rem, env(safe-area-inset-top)) clamp(1rem, 4vw, 3rem) max(2rem, env(safe-area-inset-bottom));
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  font-family: Arial, Helvetica, sans-serif;
+  pointer-events: none;
+}
+
+.is-portrait-lock main {
+  display: none;
+}
+
+.is-portrait-lock #rotateNotice {
+  display: flex;
+}
+
+/* UI BUTTON (Mute) */
+.ui-btn {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  background: #fff;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,.2);
+  line-height: 1;
+  z-index: 120;
+}
+
+.ui-btn:focus {
+  outline: 2px solid #ff9a3c;
+  outline-offset: 2px;
+}
+
+/* FOOTER */
+footer {
+  margin-top: 8px;
+  font-size: 12px;
+  opacity: .75;
+  font-family: Arial, Helvetica, sans-serif;
+  color: rgba(255,255,255,0.75);
+  text-align: center;
+  position: relative;
+  z-index: 5;
+}
+
+footer a {
+  color: #7aa2ff;
+  text-decoration: none;
+}
+footer a:hover {
+  text-decoration: underline;
+}
+
+/* MOBILE CONTROLS */
+#mobileControls {
+  display: none;
+  position: fixed;
+  bottom: max(16px, env(safe-area-inset-bottom));
+  left: 0;
+  width: 100%;
+  justify-content: center;
+  gap: clamp(10px, 3vw, 18px);
+  padding: 0 clamp(12px, 4vw, 32px);
+  z-index: 120;
+}
+
+#mobileControls:empty {
+  display: none;
+}
+
+.mc-btn {
+  background: #fff;
+  border: none;
+  font-size: 2rem;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  box-shadow: 0 4px 8px rgba(0,0,0,.2);
+  cursor: pointer;
+  line-height: 1;
+}
+
+.mc-btn:focus {
+  outline: 2px solid #ff9a3c;
+  outline-offset: 2px;
+}
+
+button {
+  cursor: pointer;
+}
+
+@media (max-width: 900px) {
+  #mobileControls {
+    display: flex;
+  }
+}
+
+/* RESPONSIVE FINETUNE */
+@media (max-width: 900px) {
+  #startScreen .screen__inner {
+    padding: 18px 8vw;
+    font-size: 1rem;
+    max-width: min(90%, 400px);
+    margin: 0;
+    justify-self: center;
+    align-self: center;
+  }
+}
+
+@media (max-width: 600px) {
+  #startScreen .screen__inner {
+    font-size: 0.95rem;
+    padding: 10px 2vw;
+  }
+}
+
+/* UTILS */
+[hidden] {
+  display: none !important;
+}
+
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0,0,0,0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+body.game-page::before,
+body.game-page::after {
+  content: none !important;
+}

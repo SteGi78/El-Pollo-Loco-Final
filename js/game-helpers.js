@@ -56,10 +56,13 @@ function returnToMenu() {
     stopCurrentWorld();
   }
 
+<<<<<<< HEAD
   // zurück im Menü -> Mobile-Steuerung ausblenden
   document.body.classList.remove('is-playing');
   if (typeof adjustControls === 'function') adjustControls();
 
+=======
+>>>>>>> c8f4fc3242a73c5fc6378c8305766fb02549da37
   const start = document.getElementById('startScreen');
   showElementGrid(start);
 }

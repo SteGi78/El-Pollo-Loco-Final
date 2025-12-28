@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // ==== El Pollo Loco – DPI/Retina Fix (Canvas bleibt logisch 720x480) ====
 // Warum so?
 // - Das komplette Projekt (BackgroundObject, Physics, UI-Bars etc.) rechnet in 720x480.
@@ -40,3 +41,32 @@
   window.addEventListener('resize', () => requestAnimationFrame(applyDpi), { passive: true });
   requestAnimationFrame(applyDpi);
 })();
+=======
+// ==== El Pollo Loco - DPI/Retina Fix (canvas id="canvas") ====
+(function(){
+  const canvas = document.getElementById('canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  function fitCanvasToCssSize() {
+    const dpr = Math.max(1, window.devicePixelRatio || 1);
+    const rect = canvas.getBoundingClientRect();
+    const w = Math.round(rect.width * dpr);
+    const h = Math.round(rect.height * dpr);
+    if (canvas.width !== w || canvas.height !== h) {
+      canvas.width  = w;
+      canvas.height = h;
+      // Logische Einheiten auf CSS-Pixel skalieren
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    // Optional: Wenn deine Engine Viewport braucht:
+    // if (window.world && typeof window.world.setViewport === 'function') {
+    //   window.world.setViewport(rect.width, rect.height);
+    // }
+  }
+
+  window.addEventListener('resize', fitCanvasToCssSize);
+  // Nach dem ersten Layout:
+  requestAnimationFrame(fitCanvasToCssSize);
+})();
+>>>>>>> c8f4fc3242a73c5fc6378c8305766fb02549da37

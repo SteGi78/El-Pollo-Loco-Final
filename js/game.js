@@ -17,8 +17,11 @@ window.init = function(restart = false) {
     canvas = document.getElementById("canvas");
     world = new World(canvas, keyboard);
     hideScreens();
+<<<<<<< HEAD
     // Mobile-Controls sollen erst sichtbar werden, wenn das Spiel wirklich läuft
     document.body.classList.add('is-playing');
+=======
+>>>>>>> c8f4fc3242a73c5fc6378c8305766fb02549da37
     adjustControls();
     playGameMusic();
     enableMobileBtn();
@@ -42,6 +45,7 @@ function stopCurrentWorld() {
 }
 function adjustControls() {
     const mobileControls = document.getElementById('mobileControls');
+<<<<<<< HEAD
     if (!mobileControls) return;
 
     // Mobile-Buttons sollen NUR auf echten Mobile/Tablet-Geräten sichtbar sein.
@@ -57,6 +61,12 @@ function adjustControls() {
 
     // Wichtig: keine Inline-Styles, damit CSS (body.is-mobile-ui ...) die Sichtbarkeit steuert.
     mobileControls.style.display = '';
+=======
+    const isMobile = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT}px)`).matches;
+    if (!mobileControls) return;
+    mobileControls.style.display = isMobile ? 'flex' : 'none';
+    mobileControls.setAttribute('aria-hidden', isMobile ? 'false' : 'true');
+>>>>>>> c8f4fc3242a73c5fc6378c8305766fb02549da37
 }
 function enableMobileBtn() {
     const mobileControls = document.getElementById('mobileControls');
@@ -71,4 +81,7 @@ function playGameMusic() {
 window.addEventListener('resize', adjustControls);
 window.addEventListener('orientationchange', adjustControls);
 document.addEventListener('DOMContentLoaded', adjustControls);
+<<<<<<< HEAD
 window.addEventListener('epl:templates-loaded', adjustControls);
+=======
+>>>>>>> c8f4fc3242a73c5fc6378c8305766fb02549da37

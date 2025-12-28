@@ -6,6 +6,7 @@ class BackgroundObject extends DrawableObject {
         this.y = 480 - this.height;
         this.x = x;
     }
+<<<<<<< HEAD
 
     /**
      * Draw background tiles in a seam-safe way.
@@ -39,4 +40,6 @@ class BackgroundObject extends DrawableObject {
             x - 2, y, this.width + 4, this.height
         );
     }
+=======
+>>>>>>> c8f4fc3242a73c5fc6378c8305766fb02549da37
 }
