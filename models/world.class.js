@@ -36,7 +36,6 @@ class World {
      */
     draw() {
         if (this.isDestroyed) return;
-<<<<<<< HEAD
         // IMPORTANT:
         // Use an integer camera translation to avoid sub-pixel rendering.
         // Sub-pixel camera movement is the #1 reason for visible 1px seams
@@ -56,15 +55,6 @@ class World {
         // Draw fixed UI (screen-space)
         this.drawFixedObjs();
 
-=======
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.ctx.translate(this.cam_x, 0);
-        this.drawBasicObjs();
-        this.drawFixedObjs();
-        this.drawEnemies();
-        this.drawCollectableObjs();
-        this.ctx.translate(-this.cam_x, 0);
->>>>>>> c8f4fc3242a73c5fc6378c8305766fb02549da37
         this.requestId = requestAnimationFrame(() => {
             this.draw();
             this.checkOtherDirection();
@@ -85,20 +75,12 @@ class World {
      * Function to draw fixed objects, the status bars.
      */
     drawFixedObjs() {
-<<<<<<< HEAD
-=======
-        this.ctx.translate(-this.cam_x, 0);
->>>>>>> c8f4fc3242a73c5fc6378c8305766fb02549da37
         this.addToMap(this.statusBar);
         this.addToMap(this.coinBar);
         this.addToMap(this.bottleBar);
         if (!this.isCharacterTooFar(this.level.endboss[0])) {
             this.addToMap(this.endBossBar);
         }
-<<<<<<< HEAD
-=======
-        this.ctx.translate(this.cam_x, 0);
->>>>>>> c8f4fc3242a73c5fc6378c8305766fb02549da37
     }
 
     /**

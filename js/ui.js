@@ -49,7 +49,6 @@ function setupInstructionsDialog() {
 }
 
 function toggleFullscreen() {
-<<<<<<< HEAD
   // Fullscreen-HOST:
   // Wir schicken den Container (main/#app) in Fullscreen – NICHT .epl-wrap.
   // Grund: Wenn .epl-wrap selbst fullscreen ist, erzwingt der Browser oft 100vw/100vh
@@ -64,22 +63,12 @@ function toggleFullscreen() {
     }
   } else if (document.exitFullscreen) {
     return document.exitFullscreen();
-=======
-  const root = document.documentElement;
-  if (!document.fullscreenElement) {
-    if (root.requestFullscreen) {
-      root.requestFullscreen().catch(() => {});
-    }
-  } else if (document.exitFullscreen) {
-    document.exitFullscreen().catch(() => {});
->>>>>>> c8f4fc3242a73c5fc6378c8305766fb02549da37
   }
 }
 
 function bindFullscreenButton() {
   const btn = document.getElementById('fullscreenBtn');
   if (!btn) return;
-<<<<<<< HEAD
   // nicht doppelt binden (Template-Reload / mehrfaches Init)
   if (btn.dataset.bound === '1') return;
   btn.dataset.bound = '1';
@@ -104,14 +93,6 @@ function updateFullscreenButtonState() {
   btn.setAttribute('aria-pressed', String(isFs));
 }
 
-=======
-  btn.addEventListener('click', (event) => {
-    event.stopPropagation();
-    toggleFullscreen();
-  });
-}
-
->>>>>>> c8f4fc3242a73c5fc6378c8305766fb02549da37
 function updateOrientationLock() {
   const rotateNotice = document.getElementById('rotateNotice');
   const main = document.querySelector('main');
@@ -124,7 +105,6 @@ function updateOrientationLock() {
     if (rotateNotice && !rotateNotice.hasAttribute('tabindex')) {
       rotateNotice.setAttribute('tabindex', '-1');
     }
-<<<<<<< HEAD
     // Robust: nicht nur über CSS-Klassen steuern.
     // In manchen Mobile-/DevTools-Setups kann es zu Klassennamen-/Cascade-Hairlines kommen.
     // Deshalb setzen wir zusätzlich Inline-Styles, damit der Hinweis garantiert sichtbar ist.
@@ -137,20 +117,12 @@ function updateOrientationLock() {
     setInert(main, true);
     main.style.display = 'none';
 
-=======
-    document.body.classList.add('is-portrait-lock');
-    rotateNotice.hidden = false;
-    rotateNotice.setAttribute('aria-hidden', 'false');
-    main.setAttribute('aria-hidden', 'true');
-    setInert(main, true);
->>>>>>> c8f4fc3242a73c5fc6378c8305766fb02549da37
     blurIfContainsActiveElement(main);
     rotateNotice?.focus({ preventScroll: true });
   } else {
     document.body.classList.remove('is-portrait-lock');
     rotateNotice.hidden = true;
     rotateNotice.setAttribute('aria-hidden', 'true');
-<<<<<<< HEAD
     rotateNotice.style.display = 'none';
 
     main.setAttribute('aria-hidden', 'false');
@@ -178,17 +150,6 @@ document.addEventListener('fullscreenchange', () => {
 
   // DPI/Canvas und Layout sauber nachziehen
   window.dispatchEvent(new Event('resize'));
-=======
-    main.setAttribute('aria-hidden', 'false');
-    setInert(main, false);
-  }
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-  setupInstructionsDialog();
-  bindFullscreenButton();
-  updateOrientationLock();
->>>>>>> c8f4fc3242a73c5fc6378c8305766fb02549da37
 });
 
 window.addEventListener('resize', updateOrientationLock);
@@ -196,7 +157,4 @@ window.addEventListener('orientationchange', updateOrientationLock);
 
 // global verfügbar machen
 window.updateOrientationLock = updateOrientationLock;
-<<<<<<< HEAD
 window.toggleFullscreen = toggleFullscreen;
-=======
->>>>>>> c8f4fc3242a73c5fc6378c8305766fb02549da37

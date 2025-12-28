@@ -17,7 +17,6 @@
       href="./img/7_statusbars/3_icons/icon_salsa_bottle.png"
       type="image/png"
     />
-<<<<<<< HEAD
     <link rel="stylesheet" href="css/base.css" />
     <link rel="stylesheet" href="css/layout.css" />
     <link rel="stylesheet" href="css/components.css" />
@@ -30,30 +29,6 @@
 
     <main>
       <div class="epl-wrap" id="app">
-=======
-
-    <link rel="stylesheet" href="script.css" />
-
-    <!-- Fallback für Screenreader-only Inhalte, falls externes CSS nicht lädt -->
-    <style>
-      .sr-only {
-        position: absolute;
-        left: -10000px;
-        width: 1px;
-        height: 1px;
-        overflow: hidden;
-      }
-    </style>
-  </head>
-
-  <body class="game-page">
-    <noscript>
-      Bitte JavaScript aktivieren, um El Pollo Loco zu spielen.
-    </noscript>
-
-    <main>
-      <div class="epl-wrap">
->>>>>>> c8f4fc3242a73c5fc6378c8305766fb02549da37
         <!-- Spielfeld -->
         <canvas
           id="canvas"
@@ -61,16 +36,11 @@
           height="480"
           tabindex="0"
           aria-label="Spielfläche"
-<<<<<<< HEAD
-=======
-          role="application"
->>>>>>> c8f4fc3242a73c5fc6378c8305766fb02549da37
         >
           Dein Browser unterstützt das Canvas-Element nicht. Bitte aktualisiere
           deinen Browser.
         </canvas>
 
-<<<<<<< HEAD
         <!-- UI wird aus /templates geladen -->
         <div id="ui-root"></div>
 
@@ -84,79 +54,6 @@
         >
           Impressum
         </a>
-=======
-        <!-- STARTSCREEN -->
-        <section
-          id="startScreen"
-          class="screen"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="startScreenTitle"
-          onclick="init()"
-        >
-          <div
-            class="screen__inner"
-            onclick="event.stopPropagation()"
-            role="document"
-          >
-            <h1 id="startScreenTitle">Willkommen bei El Pollo Loco!</h1>
-
-            <p>
-              Sammle Flaschen, weiche den Hühnern aus, und besiege den Endboss.
-            </p>
-            <p>
-              In einem Dorf voller verrückter Hühner muss Pepe mit Geschick,
-              Timing und genug Salsa-Flaschen den gackernden Oberboss stoppen.
-              Bist du bereit?
-            </p>
-
-            <div class="start-actions">
-              <button
-                type="button"
-                onclick="document.getElementById('instructionsDialog').showModal();"
-              >
-                Anleitung
-              </button>
-
-              <button type="button" onclick="init();">
-                Spiel starten
-              </button>
-
-              <button type="button" id="fullscreenBtn">
-                Vollbild
-              </button>
-            </div>
-
-            <p class="start-hint">
-              Tipp: Du kannst auch einfach ins Spielfeld klicken oder tippen,
-              um zu starten.
-            </p>
-          </div>
-        </section>
-
-        <!-- GAME OVER SCREEN -->
-        <section
-          id="gameOverScreen"
-          class="screen"
-          aria-hidden="true"
-          hidden
-        >
-          <div class="screen__inner" role="document">
-            <h2>Game Over</h2>
-            <p id="gameOverMessage" class="gameover-msg">
-              Du wurdest besiegt.
-            </p>
-            <div class="gameover-actions">
-              <button type="button" onclick="restartGame();">
-                Neu starten
-              </button>
-              <button type="button" onclick="returnToMenu();">
-                Zurück zum Hauptmenü
-              </button>
-            </div>
-          </div>
-        </section>
->>>>>>> c8f4fc3242a73c5fc6378c8305766fb02549da37
 
         <!-- LIVE-REGION (Screenreader Status) -->
         <div
@@ -165,7 +62,6 @@
           aria-live="polite"
           aria-atomic="true"
         ></div>
-<<<<<<< HEAD
       </div>
     </main>
 
@@ -174,107 +70,6 @@
          wenn <main> im Portrait-Modus ausgeblendet wird) -->
     <div id="overlay-root"></div>
 
-=======
-
-        <!-- ROTATE NOTICE -->
-        <div
-          id="rotateNotice"
-          role="alert"
-          aria-live="assertive"
-          hidden
-        >
-          Bitte drehe dein Gerät in die Waagerechte (Landscape), um zu spielen.
-        </div>
-
-        <!-- ANLEITUNG / STEUERUNG -->
-        <dialog
-          id="instructionsDialog"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="instrTitle"
-        >
-          <h2 id="instrTitle">Steuerung</h2>
-
-          <p>
-            <strong>Pfeiltasten</strong>: Links / Rechts bewegen<br />
-            <strong>Leertaste</strong>: Springen<br />
-            <strong>D</strong>: Flasche werfen
-          </p>
-
-          <p>
-            Auf Touch-Geräten kannst du unten die virtuellen Buttons benutzen.
-          </p>
-
-          <button
-            type="button"
-            onclick="document.getElementById('instructionsDialog').close()"
-          >
-            Schließen
-          </button>
-        </dialog>
-
-        <!-- MUTE BUTTON -->
-        <button
-          id="muteBtn"
-          class="ui-btn"
-          type="button"
-          aria-label="Sound stumm schalten oder aktivieren"
-          onclick="toggleMute()"
-        >
-          🔈
-        </button>
-
-        <!-- MOBILE CONTROLS -->
-        <nav
-          id="mobileControls"
-          class="mobile-controls"
-          aria-label="Mobile Steuerung"
-        >
-          <button
-            id="btnLeft"
-            class="mc-btn"
-            type="button"
-            aria-label="Nach links laufen"
-          >
-            ⬅️
-          </button>
-
-          <button
-            id="btnRight"
-            class="mc-btn"
-            type="button"
-            aria-label="Nach rechts laufen"
-          >
-            ➡️
-          </button>
-
-          <button
-            id="btnJump"
-            class="mc-btn"
-            type="button"
-            aria-label="Springen"
-          >
-            🔼
-          </button>
-
-          <button
-            id="btnAction"
-            class="mc-btn"
-            type="button"
-            aria-label="Flasche werfen"
-          >
-            🎯
-          </button>
-        </nav>
-
-        <!-- FOOTER / IMPRESSUM -->
-        <footer class="footer-legal">
-          <a href="impressum.html">Impressum</a>
-        </footer>
-      </div>
-    </main>
-
->>>>>>> c8f4fc3242a73c5fc6378c8305766fb02549da37
     <!-- GAME SCRIPTS -->
     <script src="models/drawable-object.class.js" defer></script>
     <script src="models/moveable-object.class.js" defer></script>
@@ -304,7 +99,6 @@
     <script src="js/game-helpers.js" defer></script>
 
     <script src="js/preload.js" defer></script>
-<<<<<<< HEAD
 
     <!-- Templates zuerst laden -->
     <script src="js/templates.js" defer></script>
@@ -317,11 +111,6 @@
     <script src="js/game.js" defer></script>
     <script src="js/ui.js" defer></script>
     <script src="js/layout-fit.js" defer></script>
-=======
-    <script src="js/event-listeners.js" defer></script>
-    <script src="js/game.js" defer></script>
-    <script src="js/ui.js" defer></script>
->>>>>>> c8f4fc3242a73c5fc6378c8305766fb02549da37
     <script src="js/dpi.js" defer></script>
   </body>
 </html>
