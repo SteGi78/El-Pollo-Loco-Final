@@ -101,24 +101,9 @@ function initLevel(){
 
     coins = [
         new Coin(200, 150),
-        new Coin(250, 100),
-        new Coin(300, 150),
         new Coin(1000, 100),
-        new Coin(1050, 150),
-        new Coin(1100, 150),
-        new Coin(1150, 100),
-        new Coin(1450, 200),
-        new Coin(1800, 150),
         new Coin(1850, 75),
-        new Coin(2400, 150),
-        new Coin(2450, 100),
-        new Coin(2500, 150),
         new Coin(2750, 50),
-        new Coin(3100, 150),
-        new Coin(3150, 75),
-        new Coin(3450, 150),
-        new Coin(3550, 100),
-        new Coin(3600, 150),
         new Coin(4000, 50)
     ]);    
 }

@@ -69,7 +69,7 @@
 }
 
 .start-hint {
-  font-size: 0.8rem;
+  font-size: 1rem;
   opacity: 0.8;
   margin-top: 16px;
 }
@@ -77,7 +77,7 @@
 /* Legal link (Impressum) – sichtbar auf allen Viewports (auch wenn Footer auf Mobile ausgeblendet ist) */
 .legal-row {
   margin: 14px 0 0 0;
-  font-size: 0.85rem;
+  font-size: 1rem;
 }
 
 .legal-link {
@@ -113,7 +113,7 @@
   background: rgba(255, 255, 255, 0.92);
   color: #222;
   font-family: inherit;
-  font-size: 14px;
+  font-size: 1rem;
   line-height: 1;
   text-decoration: none;
   box-shadow: 0 8px 20px rgba(0,0,0,.25);
@@ -134,7 +134,7 @@ body.is-playing #legalFab {
 
 #startScreen .screen__inner button {
   font-family: inherit;
-  font-size: 0.9rem;
+  font-size: 1rem;
   cursor: pointer;
   padding: 4px 8px;
 }
@@ -190,7 +190,7 @@ body.is-playing #legalFab {
 
 #gameOverScreen .screen__inner button {
   font-family: inherit;
-  font-size: 0.9rem;
+  font-size: 1rem;
   cursor: pointer;
   padding: 6px 10px;
 }
@@ -220,10 +220,81 @@ dialog#instructionsDialog h2 {
 
 dialog#instructionsDialog button {
   font-family: inherit;
-  font-size: 0.9rem;
+  font-size: 1rem;
   cursor: pointer;
   margin-top: 12px;
   padding: 6px 10px;
+}
+
+/* Dialog (Anleitung/Impressum) */
+dialog#legalDialog {
+  border: none;
+  border-radius: 12px;
+  padding: 16px 22px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.25);
+  font-family: inherit;
+  line-height: 1.4;
+  max-width: min(92vw, 420px);
+  max-height: min(84dvh, 640px);
+  overflow-y: auto;
+}
+
+dialog#legalDialog h2, dialog#legalDialog h3 {
+  /* gleicher Font wie restlicher Text */
+  font-family: inherit;
+  font-size: 1.2rem;
+  line-height: 1.2;
+  margin-top: 0;
+  margin-bottom: 12px;
+  color: #000;
+}
+
+dialog#legalDialog button {
+  font-family: inherit;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 12px;
+  padding: 6px 10px;
+}
+
+
+
+/* Gemeinsame Dialog-Elemente */
+dialog .dialog-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:10px;
+}
+dialog .dialog-close{
+  border:none;
+  background:transparent;
+  font-size:1.1rem;
+  cursor:pointer;
+  padding:4px 8px;
+}
+dialog .dialog-actions{
+  display:flex;
+  justify-content:flex-end;
+  margin-top:12px;
+}
+dialog .dialog-actions button{
+  font-family:inherit;
+  font-size:1rem;
+  cursor:pointer;
+  padding:6px 10px;
+}
+dialog .legal-box{
+  border: 1px solid rgba(0,0,0,0.15);
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: rgba(0,0,0,0.04);
+}
+dialog .note{
+  font-size: 1rem;
+  color: rgba(0,0,0,0.7);
+  margin-top: 10px;
 }
 
 /* ROTATE NOTICE */

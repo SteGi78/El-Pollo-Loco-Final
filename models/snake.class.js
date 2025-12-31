@@ -5,13 +5,16 @@ class Snake extends MoveableObject {
     width = 70;
     speed = 0;
     energy = 1;
+
     offset = {
         top: 10,
         bottom: 10,
         left: 10,
         right: 10
-    }
+    };
+
     runInterval = null;
+    deadHandled = false;
 
     IMAGES_ATTACKING = [
         "img/3_enemie_snake/2_attack/1_a.png",
@@ -31,21 +34,26 @@ class Snake extends MoveableObject {
     }
 
     /**
-     * Function to manage the animations and movements.
+     * Steuert Animationen und (falls nötig) Status-Übergänge.
+     * Wichtig: Nach dem Tod darf kein Intervall weiterlaufen, sonst wird
+     * das Dead-Image permanent neu geladen (sichtbar im Network-Tab).
      */
     animate() {
         this.runInterval = setInterval(() => {
-            if(this.isDead()){
+            if (this.isDead() && !this.deadHandled) {
+                this.deadHandled = true;
                 this.stopAnimation();
-                this.loadImage(this.IMG_DEAD);
+                this.speed = 0;
+                this.loadImage(this.IMG_DEAD[0]);
+                clearInterval(this.runInterval);
             }
         }, 150);
-        this.animationIntervals = this.playAnimation(this.IMAGES_ATTACKING, 120);      
 
+        this.animationIntervals = this.playAnimation(this.IMAGES_ATTACKING, 120);
     }
-    
+
     /**
-     * Function to clear all running animations.
+     * Räumt alle laufenden Intervalle/Animationen auf.
      */
     destructor() {
         clearInterval(this.runInterval);

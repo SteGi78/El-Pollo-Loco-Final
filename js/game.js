@@ -42,21 +42,19 @@ function stopCurrentWorld() {
 }
 function adjustControls() {
     const mobileControls = document.getElementById('mobileControls');
-    if (!mobileControls) return;
 
-    // Mobile-Buttons sollen NUR auf echten Mobile/Tablet-Geräten sichtbar sein.
-    // Nicht nur, weil das Browserfenster am Desktop schmal ist.
-    const ua = navigator.userAgent || '';
-    const isMobileDevice = /Android|iPhone|iPad|iPod|Mobi/i.test(ua);
+    // Pointer-Queries: Touch-Device zuverlässig erkennen (iPad Desktop-Viewport etc.)
+    const isCoarsePointer =
+        window.matchMedia?.('(pointer: coarse)').matches ||
+        window.matchMedia?.('(any-pointer: coarse)').matches ||
+        ((navigator.maxTouchPoints && navigator.maxTouchPoints > 0) || ('ontouchstart' in window));
 
-    document.body.classList.toggle('is-mobile-ui', isMobileDevice);
+    // Mobile UI (Buttons) nur dann aktivieren, wenn Touch verfügbar ist
+    document.body.classList.toggle('is-mobile-ui', !!isCoarsePointer);
 
-    const isPlaying = document.body.classList.contains('is-playing');
-    const shouldShow = isMobileDevice && isPlaying;
-    mobileControls.setAttribute('aria-hidden', shouldShow ? 'false' : 'true');
-
-    // Wichtig: keine Inline-Styles, damit CSS (body.is-mobile-ui ...) die Sichtbarkeit steuert.
-    mobileControls.style.display = '';
+    // Wir lassen die CSS-Regeln die Sichtbarkeit steuern.
+    // (Kein inline display setzen, sonst sabotiert das Media Queries.)
+    if (mobileControls) mobileControls.style.display = '';
 }
 function enableMobileBtn() {
     const mobileControls = document.getElementById('mobileControls');
@@ -64,7 +62,9 @@ function enableMobileBtn() {
     mobileControls.addEventListener('contextmenu', (e) => e.preventDefault());
 }
 function playGameMusic() {
+    window._gameMusicShouldPlay = true;
     if (typeof SOUNDS.game === "undefined") return;
+    // Start/ensure background music is playing (playSound resets to 0 only here on explicit start)
     playSound(SOUNDS.game, false);
 }
 

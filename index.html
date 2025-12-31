@@ -44,17 +44,15 @@
         <!-- UI wird aus /templates geladen -->
         <div id="ui-root"></div>
 
-        <!-- Impressum: genau 1 Button im Startmenü, nicht im laufenden Spiel -->
-        <a
+        <!-- genau 1x Impressum (nur im Startmenü sichtbar, wird per CSS bei body.is-playing ausgeblendet) -->
+        <button
           id="legalFab"
-          href="impressum.html"
-          target="_blank"
-          rel="noopener"
-          aria-label="Impressum öffnen"
+          type="button"
+          data-action="open-legal"
+          aria-haspopup="dialog"
         >
           Impressum
-        </a>
-
+        </button>
         <!-- LIVE-REGION (Screenreader Status) -->
         <div
           id="sr-status"
@@ -75,10 +73,14 @@
     <script src="models/moveable-object.class.js" defer></script>
     <script src="models/throwable-object.class.js" defer></script>
     <script src="models/character.class.js" defer></script>
+    <script src="models/character.anim.js" defer></script>
+    <script src="models/character.control.js" defer></script>
     <script src="models/chicken.class.js" defer></script>
     <script src="models/chick.class.js" defer></script>
     <script src="models/snake.class.js" defer></script>
     <script src="models/endboss.class.js" defer></script>
+    <script src="models/endboss.anim.js" defer></script>
+    <script src="models/endboss.state.js" defer></script>
     <script src="models/cloud.class.js" defer></script>
     <script src="models/background-object.class.js" defer></script>
     <script src="models/bottle.class.js" defer></script>
@@ -89,6 +91,11 @@
     <script src="models/endboss-bar.class.js" defer></script>
     <script src="models/keyboard.class.js" defer></script>
     <script src="models/world.class.js" defer></script>
+    <script src="models/world.render.js" defer></script>
+    <script src="models/world.collision.js" defer></script>
+    <script src="models/world.loop.js" defer></script>
+    <script src="models/world.collect.js" defer></script>
+    <script src="models/world.lifecycle.js" defer></script>
     <script src="models/level.class.js" defer></script>
 
     <script src="levels/level1.js" defer></script>

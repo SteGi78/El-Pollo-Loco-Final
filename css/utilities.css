@@ -26,12 +26,14 @@ body.game-page::after {
 
 /* Scrollbar optisch verstecken (Scroll bleibt möglich) */
 .screen__inner,
-dialog#instructionsDialog {
+dialog#instructionsDialog,
+dialog#legalDialog {
   scrollbar-width: none; /* Firefox */
 }
 
 .screen__inner::-webkit-scrollbar,
-dialog#instructionsDialog::-webkit-scrollbar {
+dialog#instructionsDialog::-webkit-scrollbar,
+dialog#legalDialog::-webkit-scrollbar {
   width: 0;
   height: 0;
 }

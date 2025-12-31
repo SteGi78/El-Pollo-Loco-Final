@@ -27,6 +27,7 @@ async function loadTemplates() {
     "./templates/startScreen.html",
     "./templates/gameOverScreen.html",
     "./templates/instructionsDialog.html",
+    "./templates/legalDialog.html",
     "./templates/muteBtn.html",
     "./templates/mobileControls.html",
     "./templates/footer.html",

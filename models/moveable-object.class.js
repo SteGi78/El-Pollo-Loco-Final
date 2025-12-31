@@ -8,6 +8,7 @@ class MoveableObject extends DrawableObject {
     acceleration = 5;
     otherDirection = false;
     animationIntervals = null;
+    gravityInterval = null;
     deathAnimation = null;
     lastHit = 0;
 
@@ -15,7 +16,8 @@ class MoveableObject extends DrawableObject {
      * Function to apply gravity to the moveable object.
      */
     applyGravity() {
-        setInterval(() => {
+        if (this.gravityInterval) clearInterval(this.gravityInterval);
+        this.gravityInterval = setInterval(() => {
             if (!(this instanceof ThrowableObject)) {
                 if (this.isAboveGround() || this.speedY > 0) {
                     this.y -= this.speedY;
@@ -86,6 +88,13 @@ class MoveableObject extends DrawableObject {
     /**
      * Function to stop the animation by clearing the intervals on the variable animationIntervals.
      */
+    stopGravity() {
+        if (this.gravityInterval) {
+            clearInterval(this.gravityInterval);
+            this.gravityInterval = null;
+        }
+    }
+
     stopAnimation() {
         clearInterval(this.animationIntervals);
         this.animationIntervals = null;

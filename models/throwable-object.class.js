@@ -4,6 +4,7 @@ class ThrowableObject extends MoveableObject {
     speed = 40;
     isSplashed = false;
     hasCollided = false;
+    throwInterval = null;
     offset = {
         top: 0,
         right: 0,
@@ -45,7 +46,7 @@ class ThrowableObject extends MoveableObject {
     throw(otherDirection) {
         this.speedY = 30;
         this.applyGravity();
-        setInterval(() => {
+        this.throwInterval = setInterval(() => {
             if(!this.isSplashed) {
                 if(otherDirection){
                     this.speed = 50;
@@ -79,5 +80,10 @@ class ThrowableObject extends MoveableObject {
      */
     destructor() {
         clearInterval(this.animationIntervals);
+        if (this.throwInterval) {
+            clearInterval(this.throwInterval);
+            this.throwInterval = null;
+        }
+        if (typeof this.stopGravity === 'function') this.stopGravity();
     }
 }

@@ -17,6 +17,14 @@ document.addEventListener("click", (e) => {
       document.getElementById("instructionsDialog")?.close?.();
       break;
 
+    case "open-legal":
+      openLegal();
+      break;
+
+    case "close-legal":
+      closeLegal();
+      break;
+
     case "restart-game":
       restartGame();
       break;
@@ -45,3 +53,16 @@ document.addEventListener("pointerdown", (e) => {
   const start = document.getElementById("startScreen");
   if (start && !start.hidden) init();
 });
+function openLegal() {
+  const dlg = document.getElementById("legalDialog");
+  if (!dlg) return;
+  if (!dlg.open) dlg.showModal();
+}
+
+function closeLegal() {
+  const dlg = document.getElementById("legalDialog");
+  if (!dlg) return;
+  if (dlg.open) dlg.close();
+}
+
+

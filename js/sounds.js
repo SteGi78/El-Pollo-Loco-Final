@@ -9,6 +9,9 @@
 // Globale Mute-Flag
 let isMuted = false;
 
+// Merkt sich, ob die Hintergrundmusik (SOUNDS.game) nach dem Entmuten wieder anlaufen soll.
+let resumeGameAfterUnmute = false;
+
 // Konfiguration aller Spiel-Sounds
 const SOUND_CONFIG = {
   walk:          { src: 'audio/walk.mp3',            volume: 0.35 },
@@ -91,14 +94,20 @@ function applyMuteStateToAllSounds() {
 function playSound(soundRef, force = false, delayMs = 0) {
   const audio = resolveSound(soundRef);
   if (!audio) return;
-  const allowed = force || !isMuted;
-  if (!allowed) return;
 
   const play = () => {
+    // WICHTIG: Mute-Status zum Playback-Zeitpunkt prüfen (auch bei Delays)
+    if (!force && isMuted) {
+      audio.pause();
+      audio.muted = true;
+      audio.volume = 0;
+      return;
+    }
+
     audio.currentTime = 0;
-    audio.muted = isMuted && !force;
+    audio.muted = false;
     const baseVolume = parseFloat(audio.dataset.baseVolume ?? 1);
-    audio.volume = (isMuted && !force) ? 0 : baseVolume;
+    audio.volume = baseVolume;
     audio.play().catch(() => {});
   };
 
@@ -142,10 +151,29 @@ function updateMuteButtonUI() {
  * Speichert außerdem den Zustand in localStorage.
  */
 function toggleMute() {
+  // Wenn wir gerade muten: merken, ob die Hintergrundmusik läuft.
+  if (!isMuted) {
+    const game = SOUNDS.game;
+    resumeGameAfterUnmute = !!(game && !game.paused);
+  }
+
   isMuted = !isMuted;
   applyMuteStateToAllSounds();
   updateMuteButtonUI();
   localStorage.setItem('muted', isMuted ? '1' : '0');
+
+  // Wenn wir entmuten: Hintergrundmusik ggf. wieder starten (ohne currentTime zu resetten).
+  if (!isMuted) {
+    const game = SOUNDS.game;
+    const shouldResume = resumeGameAfterUnmute || !!window._gameMusicShouldPlay;
+    if (game && shouldResume) {
+      const baseVolume = parseFloat(game.dataset.baseVolume ?? 1);
+      game.muted = false;
+      game.volume = baseVolume;
+      game.play().catch(() => {});
+    }
+    resumeGameAfterUnmute = false;
+  }
 }
 
 /**

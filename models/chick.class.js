@@ -12,6 +12,7 @@ class Chick extends MoveableObject {
         right: 15
     }
     runInterval = null;
+    deadHandled = false;
 
     IMAGES_WALKING =[
         "img/3_enemies_chicken/chicken_small/1_walk/1_w.png",
@@ -32,10 +33,12 @@ class Chick extends MoveableObject {
      */
     animate() {
         this.runInterval = setInterval(() => {
-            if(this.isDead()){
+            if (this.isDead() && !this.deadHandled) {
+                this.deadHandled = true;
                 this.stopAnimation();
                 this.speed = 0;
-                this.loadImage(this.IMG_DEAD);
+                this.loadImage(this.IMG_DEAD[0]);
+                clearInterval(this.runInterval);
             }
         }, 150);
         this.animationIntervals = this.playAnimation(this.IMAGES_WALKING, 125, true);      

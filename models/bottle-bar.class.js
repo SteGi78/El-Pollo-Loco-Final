@@ -36,6 +36,18 @@ class BottleBar extends StatusBar{
 
     percentage = 0;
 
+    
+    /**
+     * Bottle bar has 11 images (0..100 in 10er Schritten).
+     * Therefore we override StatusBar.updateStatusBar() (which only supports 6 images).
+     * @returns {number} index in IMAGES array (0..10)
+     */
+    updateStatusBar() {
+        const pct = Math.max(0, Math.min(100, this.percentage));
+        if (pct >= 100) return 10;
+        return Math.floor(pct / 10);
+    }
+
     constructor() {
         super();
         this.loadImages(this.IMAGES);

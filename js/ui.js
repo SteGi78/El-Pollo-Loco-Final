@@ -15,6 +15,13 @@ function showGameOverScreen(win = false) {
   overlay.removeAttribute('hidden');
   overlay.setAttribute('aria-hidden', 'false');
 
+  // Falls der Screen vorher via hideElement() 'inert' gesetzt wurde: wieder interaktiv machen
+  if (typeof setInert === 'function') {
+    setInert(overlay, false);
+  } else {
+    overlay.removeAttribute('inert');
+  }
+
   if (sr) sr.textContent = win ? 'Game gewonnen' : 'Game verloren';
 }
 
@@ -131,8 +138,24 @@ function updateOrientationLock() {
   }
 }
 
+function setupLegalDialog() {
+  const dlg = document.getElementById('legalDialog');
+  if (!dlg) return;
+
+  // Klick auf Backdrop schließt
+  dlg.addEventListener('click', (ev) => {
+    const rect = dlg.getBoundingClientRect();
+    const inDialog = (
+      ev.clientX >= rect.left && ev.clientX <= rect.right &&
+      ev.clientY >= rect.top && ev.clientY <= rect.bottom
+    );
+    if (!inDialog) dlg.close();
+  });
+}
+
 function initUIBindings() {
   setupInstructionsDialog();
+  setupLegalDialog();
   bindFullscreenButton();
   updateFullscreenButtonState();
   updateOrientationLock();
