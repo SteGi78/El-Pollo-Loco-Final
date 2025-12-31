@@ -1,19 +1,16 @@
-# El Pollo Loco – Stephan Gilles (Portfolio Build)
+﻿# El Pollo Loco  Portfolio Build (Stephan Gilles)
 
-Dies ist die aufbereitete Fassung für Abgabe / Bewerbung.
+ **Live Demo:** https://stegi78.github.io/El-Pollo-Loco-Final/
 
-## Enthalten
-- index.html (Landingpage, Spielbühne, Overlays, Mobile-Controls, Mute-Button)
-- css/ (base/layout/components/utilities/responsive)
-- js/sounds.js (Mute-Handling inkl. localStorage)
-- js/mobile-controls.js (Touch-Steuerung für Smartphone/Tablet)
-- js/game-helpers.js (restartGame(), returnToMenu())
-- impressum.html (Rechtliches)
+Jump & Run im Canvas: Flaschen sammeln, Gegner ausweichen, Endboss besiegen.  
+Optimiert für Desktop und Mobile (Landscape), inkl. Touch-Steuerung und Sound-Mute (Persistenz via localStorage).
 
-## Anforderungen aus der Checkliste
-- Responsiv: Querformat mobil, Hinweis im Hochformat
-- Keine doppelten Controls
-- Mute-Button schaltet ALLE Sounds, speichert Zustand
-- Restart ohne Reload
+## Features
+- Responsive Layout inkl. Hinweis bei Portrait (Mobile)
+- Touch-Controls nur im Spiel sichtbar (Mobile/Tablet)
+- Mute-Button schaltet alle Sounds + speichert Zustand
+- Restart/Return ohne Page-Reload
 - Impressum erreichbar
-- Screenreader-Unterstützung (aria-live Status etc.)
+
+## Tech Stack
+HTML  CSS  JavaScript  Canvas
