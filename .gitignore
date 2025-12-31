@@ -23,3 +23,7 @@ coverage/
 
 # Misc
 *.zip
+
+# Design-Quellen (nicht ins Repo)
+img/1_editables/
+*.ai
