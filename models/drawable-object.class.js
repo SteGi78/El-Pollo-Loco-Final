@@ -40,29 +40,68 @@ class DrawableObject {
      * Function to draw a frame around the moveable objects and their offsets points.
      * @param {context} ctx - The context in 2D.
      */
-    drawFrame(ctx) {
-        if (this instanceof Character ||
-            this instanceof Chicken ||
-            this instanceof Chick ||
-            this instanceof Snake ||
-            this instanceof Endboss ||
-            this instanceof Bottle ||
-            this instanceof Coin
-        ) {
-            ctx.beginPath();
-            ctx.lineWidth = "5";
-            ctx.strokeStyle = "blue";
-            ctx.rect( this.x, this.y, this.width,this.height);
-            ctx.stroke();
-            ctx.fillStyle = "red";
-            if (this instanceof Character)
-                ctx.fillStyle = "green";
-            ctx.fillRect(this.x + this.width -this.offset.right, this.y +this.height - this.offset.bottom, 5, 5);
-            ctx.fillRect(this.x + this.width -this.offset.right, this.y + this.offset.top, 5, 5);
-            if (this instanceof Character)
-                ctx.fillStyle = "yellow";
-            ctx.fillRect(this.x + this.offset.left, this.y +this.height - this.offset.bottom, 5, 5);
-            ctx.fillRect(this.x + this.offset.left, this.y + this.offset.top,5,5);
-        }
-    }
+  /**
+   * Draws debug frames for selected object types (developer mode).
+   * @param {CanvasRenderingContext2D} ctx
+   * @returns {void}
+   */
+  drawFrame(ctx) {
+    if (!this.shouldDrawDebugFrame()) return;
+    this.drawDebugBoundingBox(ctx);
+    this.drawDebugOffsetPoints(ctx);
+  }
+
+  /**
+   * @returns {boolean}
+   */
+  shouldDrawDebugFrame() {
+    return (
+      this instanceof Character
+      || this instanceof Chicken
+      || this instanceof Chick
+      || this instanceof Endboss
+      || this instanceof ThrowableObject
+      || this instanceof Bottle
+      || this instanceof Coin
+    );
+  }
+
+  /**
+   * @param {CanvasRenderingContext2D} ctx
+   * @returns {void}
+   */
+  drawDebugBoundingBox(ctx) {
+    ctx.beginPath();
+    ctx.lineWidth = 4;
+    ctx.strokeStyle = 'blue';
+    ctx.rect(this.x, this.y, this.width, this.height);
+    ctx.stroke();
+  }
+
+  /**
+   * Draws offset marker points for more accurate collision debugging.
+   * @param {CanvasRenderingContext2D} ctx
+   * @returns {void}
+   */
+  drawDebugOffsetPoints(ctx) {
+    const o = this.offset || { x: 0, y: 0, width: 0, height: 0 };
+    const isCharacter = this instanceof Character;
+    const baseY = this.y + (isCharacter ? o.y + 100 : o.y);
+    this.drawDebugPoint(ctx, this.x + o.x, baseY, 'red');
+    this.drawDebugPoint(ctx, this.x + o.x + this.width - o.width, baseY, 'red');
+  }
+
+  /**
+   * @param {CanvasRenderingContext2D} ctx
+   * @param {number} x
+   * @param {number} y
+   * @param {string} color
+   * @returns {void}
+   */
+  drawDebugPoint(ctx, x, y, color) {
+    ctx.beginPath();
+    ctx.fillStyle = color;
+    ctx.arc(x, y, 20, 0, 2 * Math.PI);
+    ctx.fill();
+  }
 }

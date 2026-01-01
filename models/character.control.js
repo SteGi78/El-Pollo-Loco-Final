@@ -6,22 +6,60 @@
  * Function to control keyboard events, character y-position and camera x-position.
  */
 Character.prototype.runControl = function () {
-  this.runInterval = setInterval(() => {
-    if (!this.isDead()) {
-      if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x
-        || this.world.keyboard.LEFT && this.x > 0) {
-        this.longIdle = false;
-        this.idleStart = false;
-        this.isWalking(this.world.keyboard.RIGHT);
-      }
-      if (this.world.keyboard.UP || this.world.keyboard.SPACE) {
-        this.isJumping();
-      }
-    }
-    this.isAfterJump();
-    this.positionCameraX();
-  }, 1000 / 60);
+  this.runInterval = setInterval(() => this._tickControl(), 1000 / 60);
 };
+
+Character.prototype._maybeEndHitStun = function () {
+  const timePassed = (Date.now() - this.lastHit) / 1000;
+  if (timePassed > 1) this.gettingHit = false;
+};
+
+
+Character.prototype._endHitStun = function () {
+  this.speed = 10;
+  this.gettingHit = false;
+};
+
+
+Character.prototype._startHitStun = function () {
+  this.hit();
+  this.speed = 2;
+  this.gettingHit = true;
+  setTimeout(() => this._endHitStun(), 500);
+};
+
+
+Character.prototype._isJumpPressed = function () {
+  return this.world.keyboard.UP || this.world.keyboard.SPACE;
+};
+
+
+Character.prototype._walkByInput = function () {
+  this.longIdle = false;
+  this.idleStart = false;
+  this.isWalking(this.world.keyboard.RIGHT);
+};
+
+
+Character.prototype._canMoveHorizontally = function () {
+  return (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x)
+    || (this.world.keyboard.LEFT && this.x > 0);
+};
+
+
+Character.prototype._handleMovementInput = function () {
+  if (this._canMoveHorizontally()) this._walkByInput();
+  if (this._isJumpPressed()) this.isJumping();
+};
+
+
+Character.prototype._tickControl = function () {
+  if (!this.isDead()) this._handleMovementInput();
+  this.isAfterJump();
+  this.positionCameraX();
+};
+
+;
 
 /**
  * Function to check character y-position after jump.
@@ -69,20 +107,10 @@ Character.prototype.isJumping = function () {
  * Function to manage the hits that the character is taking.
  */
 Character.prototype.takingHit = function () {
-  if (!this.gettingHit) {
-    this.hit();
-    this.speed = 2;
-    setTimeout(() => {
-      this.speed = 10;
-      this.gettingHit = false;
-    }, 500);
-    this.gettingHit = true;
-  } else {
-    let timePassed = new Date().getTime() - this.lastHit;
-    timePassed = timePassed / 1000;
-    if (timePassed > 1) this.gettingHit = false;
-  }
+  if (!this.gettingHit) return this._startHitStun();
+  this._maybeEndHitStun();
 };
+;
 
 /**
  * Function to manage camera position.

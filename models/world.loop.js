@@ -32,22 +32,40 @@ World.prototype.stopLoops = function () {
 };
 
 World.prototype.checkThrowObjects = function () {
-  if (this.keyboard.D && this.canThrowObject()) {
-    let x = (!this.character.otherDirection)
-      ? this.character.x + this.character.width - this.character.offset.right - 40
-      : this.character.x + this.character.offset.left - 40;
-    let y = this.character.y + this.character.offset.top;
-
-    let bottle = new ThrowableObject(x, y, this.character.otherDirection);
-    this.throwableObjects.push(bottle);
-
-    this.lastBottleThrown = new Date().getTime();
-    playSound('bottleThrow');
-
-    this.bottle_collected = Math.max(0, this.bottle_collected - 1);
-    this.updateBottleBar();
-  }
+  if (!this._shouldThrowBottle()) return;
+  const pos = this._getBottleSpawnPosition();
+  const bottle = new ThrowableObject(pos.x, pos.y, this.character.otherDirection);
+  this._commitBottleThrow(bottle);
 };
+
+World.prototype._commitBottleThrow = function (bottle) {
+  this.throwableObjects.push(bottle);
+  this.lastBottleThrown = Date.now();
+  playSound("bottleThrow");
+  this.bottle_collected = Math.max(0, this.bottle_collected - 1);
+  this.updateBottleBar();
+};
+
+
+World.prototype._getBottleSpawnX = function () {
+  const right = this.character.width - this.character.offset.right - 40;
+  const left = this.character.offset.left - 40;
+  return this.character.x + (this.character.otherDirection ? left : right);
+};
+
+
+World.prototype._getBottleSpawnPosition = function () {
+  const x = this._getBottleSpawnX();
+  const y = this.character.y + this.character.offset.top;
+  return { x, y };
+};
+
+
+World.prototype._shouldThrowBottle = function () {
+  return this.keyboard.D && this.canThrowObject();
+};
+
+;
 
 World.prototype.downgradeBottleBar = function () {
   // kompatibel behalten: alter Name, neue Logik

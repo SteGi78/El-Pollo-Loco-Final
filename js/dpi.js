@@ -1,42 +1,52 @@
-// ==== El Pollo Loco – DPI/Retina Fix (Canvas bleibt logisch 720x480) ====
-// Warum so?
-// - Das komplette Projekt (BackgroundObject, Physics, UI-Bars etc.) rechnet in 720x480.
-// - Für Responsive darf nur die CSS-Größe skalieren, nicht die Logik-Auflösung.
-// - Für Retina: Backing-Store auf DPR hochziehen, Logik bleibt 720x480.
+/**
+ * Canvas DPI handling.
+ * Keeps logic resolution at 720x480 but scales the backing store for crisp rendering.
+ */
 
-(function () {
-  const canvas = document.getElementById('canvas');
+let currentDpr = 1;
+
+/**
+ * Applies the current devicePixelRatio to the canvas backing store.
+ * Snaps DPR to an integer to reduce seams on scaled pixel art.
+ * @returns {void}
+ */
+function applyDpi() {
+  const canvas = document.getElementById("canvas");
   if (!canvas) return;
 
-  const ctx = canvas.getContext('2d');
+  const dpr = getSnappedDpr();
+  if (dpr === currentDpr) return;
 
-  const BASE_W = 720;
-  const BASE_H = 480;
+  currentDpr = dpr;
+  resizeCanvasForDpr(canvas, dpr);
+  applyCanvasTransform(canvas, dpr);
+}
 
-  function applyDpi() {
-    // NOTE (Windows Display Scaling):
-    // Fractional devicePixelRatio values (e.g. 1.25 / 1.5) can introduce
-    // subpixel sampling inside the canvas even if we draw at integer coords.
-    // That often shows up as 1px seams between tiled background images.
-    // We therefore snap DPR to an integer. On Retina this stays 2; on 125%
-    // scaling this becomes 1, which is visually more stable for this game.
-    const rawDpr = window.devicePixelRatio || 1;
-    const dpr = Math.max(1, Math.round(rawDpr));
-    const w = Math.round(BASE_W * dpr);
-    const h = Math.round(BASE_H * dpr);
+/**
+ * @returns {number}
+ */
+function getSnappedDpr() {
+  const dpr = window.devicePixelRatio || 1;
+  return Math.max(1, Math.round(dpr));
+}
 
-    if (canvas.width !== w || canvas.height !== h) {
-      canvas.width = w;
-      canvas.height = h;
-    }
+/**
+ * @param {HTMLCanvasElement} canvas
+ * @param {number} dpr
+ * @returns {void}
+ */
+function resizeCanvasForDpr(canvas, dpr) {
+  canvas.width = 720 * dpr;
+  canvas.height = 480 * dpr;
+}
 
-    // 1 Logik-Pixel bleibt 1 Einheit; der Backing-Store ist dpr-fach größer.
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-    // Crisp sprites + no resampling artifacts on tile borders.
-    ctx.imageSmoothingEnabled = false;
-  }
-
-  window.addEventListener('resize', () => requestAnimationFrame(applyDpi), { passive: true });
-  requestAnimationFrame(applyDpi);
-})();
+/**
+ * @param {HTMLCanvasElement} canvas
+ * @param {number} dpr
+ * @returns {void}
+ */
+function applyCanvasTransform(canvas, dpr) {
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}

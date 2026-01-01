@@ -21,22 +21,37 @@ class BackgroundObject extends DrawableObject {
      * - Crop a few source pixels on the left/right edge (removes transparent
      *   borders) and slightly overdraw the destination by 1px.
      */
+    /**
+     * Draws a parallax background tile.
+     * Uses integer-aligned source cropping to reduce seams on scaled canvases.
+     * @param {CanvasRenderingContext2D} ctx
+     * @returns {void}
+     */
     draw(ctx) {
-        const x = Math.round(this.x);
-        const y = Math.round(this.y);
+      const crop = this.getSeamSafeCrop();
+      this.drawCropped(ctx, crop);
+    }
 
-        // Crop source edges to avoid alpha-border seams.
-        // With large 1920px-wide PNGs downscaled to 720px, a slightly larger
-        // crop is safer (some assets have a soft/transparent edge region).
-        const border = 8;
-        const sw = Math.max(1, this.img.width - border * 2);
-        const sh = this.img.height;
+    /**
+     * Calculates a seam-safe crop rectangle for the image.
+     * @returns {{sx:number, sy:number, sw:number, sh:number, dx:number, dy:number, dw:number, dh:number}}
+     */
+    getSeamSafeCrop() {
+      const sx = 0;
+      const sy = 0;
+      const sw = Math.max(0, (this.img?.width ?? 0) - 2);
+      const sh = Math.max(0, (this.img?.height ?? 0) - 2);
+      return { sx, sy, sw, sh, dx: this.x, dy: this.y, dw: this.width, dh: this.height };
+    }
 
-        // Slight destination overdraw to cover any remaining resampling.
-        ctx.drawImage(
-            this.img,
-            border, 0, sw, sh,
-            x - 2, y, this.width + 4, this.height
-        );
+    /**
+     * Draws the image using a crop rectangle.
+     * @param {CanvasRenderingContext2D} ctx
+     * @param {{sx:number, sy:number, sw:number, sh:number, dx:number, dy:number, dw:number, dh:number}} crop
+     * @returns {void}
+     */
+    drawCropped(ctx, crop) {
+      if (!this.img) return;
+      ctx.drawImage(this.img, crop.sx, crop.sy, crop.sw, crop.sh, crop.dx, crop.dy, crop.dw, crop.dh);
     }
 }

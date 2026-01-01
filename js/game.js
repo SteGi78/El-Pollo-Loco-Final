@@ -7,23 +7,33 @@ const MOBILE_BREAKPOINT = 900;
 window.keyboard = keyboard;
 
 // init muss im globalen Scope liegen
-window.init = function(restart = false) {
-    if (restart) {
-        resetGame();
-    } else {
-        stopCurrentWorld();
-    }
-    initLevel();
-    canvas = document.getElementById("canvas");
-    world = new World(canvas, keyboard);
-    hideScreens();
-    // Mobile-Controls sollen erst sichtbar werden, wenn das Spiel wirklich läuft
-    document.body.classList.add('is-playing');
-    adjustControls();
-    playGameMusic();
-    enableMobileBtn();
-    updateOrientationLock();
+window.init = function (restart = false) {
+  prepareInit(restart);
+  initLevel();
+  canvas = getCanvas();
+  world = new World(canvas, keyboard);
+  finalizeInit();
+};
+
+function prepareInit(restart) {
+  if (restart) return resetGame();
+  stopCurrentWorld();
 }
+
+function getCanvas() {
+  return document.getElementById("canvas");
+}
+
+function finalizeInit() {
+  hideScreens();
+  document.body.classList.add("is-playing");
+  adjustControls();
+  playGameMusic();
+  enableMobileBtn();
+  updateOrientationLock();
+}
+
+
 function hideScreens() {
     hideElement(document.getElementById("startScreen"));
     hideGameOverScreen();
@@ -40,21 +50,33 @@ function stopCurrentWorld() {
     world = null;
     pauseAllSounds();
 }
+/**
+ * Applies mobile UI state depending on coarse pointer / touch support.
+ * @returns {void}
+ */
 function adjustControls() {
-    const mobileControls = document.getElementById('mobileControls');
+  document.body.classList.toggle('is-mobile-ui', isCoarsePointerDevice());
+  resetMobileControlsInlineStyle();
+}
 
-    // Pointer-Queries: Touch-Device zuverlässig erkennen (iPad Desktop-Viewport etc.)
-    const isCoarsePointer =
-        window.matchMedia?.('(pointer: coarse)').matches ||
-        window.matchMedia?.('(any-pointer: coarse)').matches ||
-        ((navigator.maxTouchPoints && navigator.maxTouchPoints > 0) || ('ontouchstart' in window));
+/**
+ * Detects touch/coarse pointer devices reliably (iPad desktop viewport etc.).
+ * @returns {boolean}
+ */
+function isCoarsePointerDevice() {
+  const coarsePointer = window.matchMedia?.('(pointer: coarse)').matches;
+  const coarseAny = window.matchMedia?.('(any-pointer: coarse)').matches;
+  const touchPoints = (navigator.maxTouchPoints && navigator.maxTouchPoints > 0) || ('ontouchstart' in window);
+  return !!(coarsePointer || coarseAny || touchPoints);
+}
 
-    // Mobile UI (Buttons) nur dann aktivieren, wenn Touch verfügbar ist
-    document.body.classList.toggle('is-mobile-ui', !!isCoarsePointer);
-
-    // Wir lassen die CSS-Regeln die Sichtbarkeit steuern.
-    // (Kein inline display setzen, sonst sabotiert das Media Queries.)
-    if (mobileControls) mobileControls.style.display = '';
+/**
+ * Resets inline display style so CSS media queries can control visibility.
+ * @returns {void}
+ */
+function resetMobileControlsInlineStyle() {
+  const mobileControls = document.getElementById('mobileControls');
+  if (mobileControls) mobileControls.style.display = '';
 }
 function enableMobileBtn() {
     const mobileControls = document.getElementById('mobileControls');

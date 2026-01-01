@@ -1,94 +1,200 @@
+/**
+ * Shows the Game Over overlay and announces the result for screen readers.
+ * @param {boolean} win - True if the player won.
+ * @returns {void}
+ */
 function showGameOverScreen(win = false) {
-  const overlay   = document.getElementById('gameOverScreen');
-  const sr        = document.getElementById('sr-status');
-  const messageEl = document.getElementById('gameOverMessage');
+  const els = getGameOverElements();
+  if (!els.overlay) return;
 
-  if (!overlay) return;
+  setGameOverMessage(els.messageEl, win);
+  showOverlay(els.overlay);
+  announceGameOver(els.sr, win);
+}
 
-  if (messageEl) {
-    messageEl.textContent = win
-      ? 'Du hast den Endboss besiegt!'
-      : 'Du wurdest besiegt.';
-  }
+/**
+ * Hides the Game Over overlay.
+ * @returns {void}
+ */
+function hideGameOverScreen() {
+  const els = getGameOverElements();
+  if (!els.overlay) return;
 
+  hideOverlay(els.overlay);
+  clearSrStatus(els.sr);
+}
+
+/**
+ * Reads DOM elements used by the Game Over overlay.
+ * @returns {{overlay: HTMLElement|null, sr: HTMLElement|null, messageEl: HTMLElement|null}}
+ */
+function getGameOverElements() {
+  return {
+    overlay: document.getElementById('gameOverScreen'),
+    sr: document.getElementById('sr-status'),
+    messageEl: document.getElementById('gameOverMessage')
+  };
+}
+
+/**
+ * Updates the visible Game Over message.
+ * @param {HTMLElement|null} messageEl
+ * @param {boolean} win
+ * @returns {void}
+ */
+function setGameOverMessage(messageEl, win) {
+  if (!messageEl) return;
+  messageEl.textContent = win ? 'Du hast den Endboss besiegt!' : 'Du wurdest besiegt.';
+}
+
+/**
+ * Shows an overlay in a robust and accessible way.
+ * @param {HTMLElement} overlay
+ * @returns {void}
+ */
+function showOverlay(overlay) {
   overlay.style.display = 'grid';
   overlay.removeAttribute('hidden');
   overlay.setAttribute('aria-hidden', 'false');
-
-  // Falls der Screen vorher via hideElement() 'inert' gesetzt wurde: wieder interaktiv machen
-  if (typeof setInert === 'function') {
-    setInert(overlay, false);
-  } else {
-    overlay.removeAttribute('inert');
-  }
-
-  if (sr) sr.textContent = win ? 'Game gewonnen' : 'Game verloren';
+  setOverlayInert(overlay, false);
 }
 
-function hideGameOverScreen() {
-  const overlay = document.getElementById('gameOverScreen');
-  const sr      = document.getElementById('sr-status');
-
-  if (!overlay) return;
-
+/**
+ * Hides an overlay in a robust and accessible way.
+ * @param {HTMLElement} overlay
+ * @returns {void}
+ */
+function hideOverlay(overlay) {
   overlay.style.display = 'none';
   overlay.setAttribute('hidden', '');
   overlay.setAttribute('aria-hidden', 'true');
+  setOverlayInert(overlay, true);
+}
 
+/**
+ * Sets or removes inert on an overlay (if available).
+ * @param {HTMLElement} overlay
+ * @param {boolean} value
+ * @returns {void}
+ */
+function setOverlayInert(overlay, value) {
+  if (typeof setInert === 'function') {
+    setInert(overlay, value);
+    return;
+  }
+  if (value) overlay.setAttribute('inert', '');
+  else overlay.removeAttribute('inert');
+}
+
+/**
+ * Announces the Game Over status for screen readers.
+ * @param {HTMLElement|null} sr
+ * @param {boolean} win
+ * @returns {void}
+ */
+function announceGameOver(sr, win) {
+  if (!sr) return;
+  sr.textContent = win ? 'Game gewonnen' : 'Game verloren';
+}
+
+/**
+ * Clears the screen-reader status line.
+ * @param {HTMLElement|null} sr
+ * @returns {void}
+ */
+function clearSrStatus(sr) {
   if (sr) sr.textContent = '';
 }
 
+
+/**
+ * Wires the instructions dialog (close on backdrop / ESC).
+ * @returns {void}
+ */
 function setupInstructionsDialog() {
   const dialog = document.getElementById('instructionsDialog');
   if (!dialog) return;
-
-  dialog.addEventListener('click', (event) => {
-    if (event.target === dialog) {
-      dialog.close();
-    }
-  });
-
-  document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape' && dialog.open) {
-      dialog.close();
-    }
-  });
+  dialog.addEventListener('click', onDialogBackdropClick.bind(null, dialog));
+  document.addEventListener('keydown', onDialogEscape.bind(null, dialog));
 }
 
+/**
+ * Closes a dialog when the backdrop is clicked.
+ * @param {HTMLDialogElement} dialog
+ * @param {MouseEvent} event
+ * @returns {void}
+ */
+function onDialogBackdropClick(dialog, event) {
+  if (event.target === dialog) dialog.close();
+}
+
+/**
+ * Closes a dialog on ESC key.
+ * @param {HTMLDialogElement} dialog
+ * @param {KeyboardEvent} event
+ * @returns {void}
+ */
+function onDialogEscape(dialog, event) {
+  if (event.key === 'Escape' && dialog.open) dialog.close();
+}
+
+/**
+ * Toggles browser fullscreen mode.
+ * Uses main/#app/documentElement as fullscreen host to preserve 3:2 letterboxing.
+ * @returns {Promise<void>|void}
+ */
 function toggleFullscreen() {
-  // Fullscreen-HOST:
-  // Wir schicken den Container (main/#app) in Fullscreen – NICHT .epl-wrap.
-  // Grund: Wenn .epl-wrap selbst fullscreen ist, erzwingt der Browser oft 100vw/100vh
-  // und das 3:2-Layout wird gedehnt. Als Host kann .epl-wrap innen „letterboxed“ bleiben.
-  const target = document.querySelector('main')
+  const target = getFullscreenHost();
+  if (!document.fullscreenElement) return requestFullscreen(target);
+  return exitFullscreen();
+}
+
+/**
+ * @returns {HTMLElement}
+ */
+function getFullscreenHost() {
+  return document.querySelector('main')
     || document.getElementById('app')
     || document.documentElement;
-
-  if (!document.fullscreenElement) {
-    if (target?.requestFullscreen) {
-      return target.requestFullscreen();
-    }
-  } else if (document.exitFullscreen) {
-    return document.exitFullscreen();
-  }
 }
 
+/**
+ * @param {HTMLElement} target
+ * @returns {Promise<void>|void}
+ */
+function requestFullscreen(target) {
+  if (target?.requestFullscreen) return target.requestFullscreen();
+}
+
+/**
+ * @returns {Promise<void>|void}
+ */
+function exitFullscreen() {
+  if (document.exitFullscreen) return document.exitFullscreen();
+}
+
+/**
+ * Binds the fullscreen toggle button (idempotent).
+ * @returns {void}
+ */
 function bindFullscreenButton() {
   const btn = document.getElementById('fullscreenBtn');
-  if (!btn) return;
-  // nicht doppelt binden (Template-Reload / mehrfaches Init)
-  if (btn.dataset.bound === '1') return;
+  if (!btn || btn.dataset.bound === '1') return;
+
   btn.dataset.bound = '1';
+  btn.addEventListener('click', handleFullscreenButtonClick);
+}
 
-  btn.addEventListener('click', (event) => {
-    // wichtig: verhindert, dass der global data-action Handler hier noch einmal reinläuft
-    // (wir rufen Fullscreen direkt im Klick-Event auf)
-    event.stopPropagation();
-
-    Promise.resolve(toggleFullscreen())
-      .catch((e) => console.warn('Fullscreen failed:', e))
-      .finally(updateFullscreenButtonState);
-  });
+/**
+ * Fullscreen button click handler.
+ * @param {MouseEvent} event
+ * @returns {void}
+ */
+function handleFullscreenButtonClick(event) {
+  event.stopPropagation();
+  Promise.resolve(toggleFullscreen())
+    .catch((e) => console.warn('Fullscreen failed:', e))
+    .finally(updateFullscreenButtonState);
 }
 
 function updateFullscreenButtonState() {
@@ -100,42 +206,112 @@ function updateFullscreenButtonState() {
   btn.setAttribute('aria-pressed', String(isFs));
 }
 
+/**
+ * Locks the UI to landscape on small portrait screens.
+ * Shows the rotate notice and hides the main game area.
+ * @returns {void}
+ */
 function updateOrientationLock() {
-  const rotateNotice = document.getElementById('rotateNotice');
-  const main = document.querySelector('main');
-  const portrait = window.matchMedia('(orientation: portrait)').matches;
-  const isSmallViewport = window.innerWidth <= 960;
-
+  const { rotateNotice, main } = getOrientationLockElements();
   if (!rotateNotice || !main) return;
 
-  if (portrait && isSmallViewport) {
-    if (rotateNotice && !rotateNotice.hasAttribute('tabindex')) {
-      rotateNotice.setAttribute('tabindex', '-1');
-    }
-    // Robust: nicht nur über CSS-Klassen steuern.
-    // In manchen Mobile-/DevTools-Setups kann es zu Klassennamen-/Cascade-Hairlines kommen.
-    // Deshalb setzen wir zusätzlich Inline-Styles, damit der Hinweis garantiert sichtbar ist.
-    document.body.classList.add('is-portrait-lock');
-    rotateNotice.hidden = false;
-    rotateNotice.setAttribute('aria-hidden', 'false');
-    rotateNotice.style.display = 'flex';
-
-    main.setAttribute('aria-hidden', 'true');
-    setInert(main, true);
-    main.style.display = 'none';
-
-    blurIfContainsActiveElement(main);
-    rotateNotice?.focus({ preventScroll: true });
-  } else {
-    document.body.classList.remove('is-portrait-lock');
-    rotateNotice.hidden = true;
-    rotateNotice.setAttribute('aria-hidden', 'true');
-    rotateNotice.style.display = 'none';
-
-    main.setAttribute('aria-hidden', 'false');
-    setInert(main, false);
-    main.style.display = '';
+  if (shouldLockToLandscape()) {
+    applyOrientationLock(rotateNotice, main);
+    return;
   }
+  clearOrientationLock(rotateNotice, main);
+}
+
+/**
+ * @returns {{rotateNotice: HTMLElement|null, main: HTMLElement|null}}
+ */
+function getOrientationLockElements() {
+  return {
+    rotateNotice: document.getElementById('rotateNotice'),
+    main: document.querySelector('main')
+  };
+}
+
+/**
+ * @returns {boolean}
+ */
+function shouldLockToLandscape() {
+  const portrait = window.matchMedia('(orientation: portrait)').matches;
+  const isSmallViewport = window.innerWidth <= 960;
+  return portrait && isSmallViewport;
+}
+
+/**
+ * @param {HTMLElement} rotateNotice
+ * @param {HTMLElement} main
+ * @returns {void}
+ */
+function applyOrientationLock(rotateNotice, main) {
+  document.body.classList.add('is-portrait-lock');
+  ensureFocusable(rotateNotice);
+  showRotateNotice(rotateNotice);
+  hideMainForOrientationLock(main);
+  if (typeof blurIfContainsActiveElement === 'function') blurIfContainsActiveElement(main);
+  rotateNotice.focus?.({ preventScroll: true });
+}
+
+/**
+ * @param {HTMLElement} rotateNotice
+ * @param {HTMLElement} main
+ * @returns {void}
+ */
+function clearOrientationLock(rotateNotice, main) {
+  document.body.classList.remove('is-portrait-lock');
+  hideRotateNotice(rotateNotice);
+  showMainAfterOrientationLock(main);
+}
+
+/**
+ * @param {HTMLElement} el
+ * @returns {void}
+ */
+function ensureFocusable(el) {
+  if (!el.hasAttribute('tabindex')) el.setAttribute('tabindex', '-1');
+}
+
+/**
+ * @param {HTMLElement} el
+ * @returns {void}
+ */
+function showRotateNotice(el) {
+  el.hidden = false;
+  el.setAttribute('aria-hidden', 'false');
+  el.style.display = 'flex';
+}
+
+/**
+ * @param {HTMLElement} el
+ * @returns {void}
+ */
+function hideRotateNotice(el) {
+  el.hidden = true;
+  el.setAttribute('aria-hidden', 'true');
+  el.style.display = 'none';
+}
+
+/**
+ * @param {HTMLElement} main
+ * @returns {void}
+ */
+function hideMainForOrientationLock(main) {
+  main.setAttribute('aria-hidden', 'true');
+  if (typeof setInert === 'function') setInert(main, true);
+  main.style.display = 'none';
+}
+
+/**
+ * @param {HTMLElement} main
+ * @returns {void}
+ */
+function showMainAfterOrientationLock(main) {
+  main.setAttribute('aria-hidden', 'false');
+  if (typeof setInert === 'function') setInert(main, false);
+  main.style.display = '';
 }
 
 function setupLegalDialog() {

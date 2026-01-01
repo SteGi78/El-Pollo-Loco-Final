@@ -10,35 +10,75 @@
 Character.prototype.animate = function () {
   this.runControl();
   this._animState = "idle";
-
-  this.animationIntervals = setInterval(() => {
-    let nextState = "idle";
-
-    if (this.isDead()) nextState = "dead";
-    else if (this.isHurt()) nextState = "hurt";
-    else if (this.isAboveGround()) nextState = "jump";
-    else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) nextState = "walk";
-
-    if (nextState !== this._animState) {
-      this._animState = nextState;
-      if (nextState === "jump" || nextState === "hurt" || nextState === "dead") {
-        this.currentImage = 0;
-      }
-    }
-
-    if (nextState === "dead") {
-      this.playDeathAnimation();
-    } else if (nextState === "hurt") {
-      this.playAnimation(this.IMAGES_HURT);
-    } else if (nextState === "jump") {
-      this.playAnimation(this.IMAGES_JUMPING);
-    } else if (nextState === "walk") {
-      this.playAnimation(this.IMAGES_WALKING);
-    } else {
-      this.playAnimation(this.IMAGES_IDLE, true);
-    }
-  }, 150);
+  this.animationIntervals = setInterval(() => this._tickAnimation(), 150);
 };
+
+Character.prototype._shouldUseLongIdle = function (currentImage) {
+  return (this.idleStart && currentImage % 35 === 0) || this.longIdle;
+};
+
+
+Character.prototype._startIdleIfNeeded = function () {
+  if (this.idleStart || this.longIdle) return;
+  this.currentImage = 0;
+  this.idleStart = true;
+};
+
+
+Character.prototype._resetLongIdle = function (arr) {
+  this.longIdle = false;
+  this.idleStart = false;
+  return arr;
+};
+
+
+Character.prototype._isBottleThrowLocked = function () {
+  return !this.world.canThrowObject() && this.world.lastBottleThrown != 0;
+};
+
+
+Character.prototype._shouldCancelLongIdle = function (idle) {
+  return !idle || this.afterJump || this.isAboveGround() || this._isBottleThrowLocked();
+};
+
+
+Character.prototype._playAnimState = function (state) {
+  if (state === "dead") return this.playDeathAnimation();
+  if (state === "hurt") return this.playAnimation(this.IMAGES_HURT);
+  if (state === "jump") return this.playAnimation(this.IMAGES_JUMPING);
+  if (state === "walk") return this.playAnimation(this.IMAGES_WALKING);
+  this.playAnimation(this.IMAGES_IDLE, true);
+};
+
+
+Character.prototype._shouldResetAnimFrame = function (state) {
+  return state === "jump" || state === "hurt" || state === "dead";
+};
+
+
+Character.prototype._syncAnimState = function (nextState) {
+  if (nextState === this._animState) return;
+  this._animState = nextState;
+  if (this._shouldResetAnimFrame(nextState)) this.currentImage = 0;
+};
+
+
+Character.prototype._getNextAnimState = function () {
+  if (this.isDead()) return "dead";
+  if (this.isHurt()) return "hurt";
+  if (this.isAboveGround()) return "jump";
+  if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) return "walk";
+  return "idle";
+};
+
+
+Character.prototype._tickAnimation = function () {
+  const nextState = this._getNextAnimState();
+  this._syncAnimState(nextState);
+  this._playAnimState(nextState);
+};
+
+;
 
 /**
  * Function represents the sequence of images to be animated.
@@ -61,23 +101,13 @@ Character.prototype.playAnimation = function (arr, idle) {
  * @returns {Array} - The array of images.
  */
 Character.prototype.isLongIdle = function (currentImage, arr, idle) {
-  if (!idle || this.afterJump || this.isAboveGround() || (!this.world.canThrowObject() && this.world.lastBottleThrown != 0)) {
-    this.longIdle = false;
-    this.idleStart = false;
-    return arr;
-  } else if (!this.idleStart && !this.longIdle) {
-    this.currentImage = 0;
-    this.idleStart = true;
-  }
-
-  if (this.idleStart && currentImage % 35 == 0 || this.longIdle) {
-    this.longIdle = true;
-    return this.IMAGES_LONG_IDLE;
-  } else {
-    this.longIdle = false;
-    return arr;
-  }
+  if (this._shouldCancelLongIdle(idle)) return this._resetLongIdle(arr);
+  this._startIdleIfNeeded();
+  if (this._shouldUseLongIdle(currentImage)) return this.IMAGES_LONG_IDLE;
+  this.longIdle = false;
+  return arr;
 };
+;
 
 /**
  * Function to play the character's death animation.

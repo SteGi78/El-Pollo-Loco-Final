@@ -43,21 +43,61 @@ class ThrowableObject extends MoveableObject {
      * Function to throw the object to the left or to the right.
      * @param {boolean} otherDirection - The value is true if the character is moving left.
      */
+    /**
+     * Throws the bottle and starts its movement/animation loop.
+     * @param {boolean} otherDirection - True if the character is facing left.
+     * @returns {void}
+     */
+    /**
+     * Throws the bottle and starts its movement/animation loop.
+     * @param {boolean} otherDirection - True if the character is facing left.
+     * @returns {void}
+     */
     throw(otherDirection) {
         this.speedY = 30;
+        this.throwingOtherDirection = otherDirection;
+        this.speed = 50;
         this.applyGravity();
-        this.throwInterval = setInterval(() => {
-            if(!this.isSplashed) {
-                if(otherDirection){
-                    this.speed = 50;
-                    this.moveLeft();
-                } else {
-                    this.moveRight();
-                }
-            }else {
-                this.animateSplash();
-            }
-        }, 60);
+        this.startThrowInterval();
+    }
+
+    /**
+     * Starts the throw interval (idempotent).
+     * @returns {void}
+     */
+    startThrowInterval() {
+        if (this.throwInterval) clearInterval(this.throwInterval);
+        this.throwInterval = setInterval(this.throwTick.bind(this), 60);
+    }
+
+    /**
+     * One throw tick: move until splashed, then play splash animation.
+     * @returns {void}
+     */
+    throwTick() {
+        if (this.isSplashed) return this.animateSplash();
+        this.playAnimation(this.IMAGES_ROTATION);
+        if (this.throwingOtherDirection) return this.moveLeft();
+        this.moveRight();
+    }
+
+    /**
+     * Starts the throw interval (idempotent).
+     * @returns {void}
+     */
+    startThrowInterval() {
+        if (this.throwInterval) clearInterval(this.throwInterval);
+        this.throwInterval = setInterval(this.throwTick.bind(this), 60);
+    }
+
+    /**
+     * One throw tick: move until splashed, then play splash animation.
+     * @returns {void}
+     */
+    throwTick() {
+        if (this.isSplashed) return this.animateSplash();
+        if (this.throwingOtherDirection) return this.moveLeft();
+        this.moveRight();
     }
 
     /**

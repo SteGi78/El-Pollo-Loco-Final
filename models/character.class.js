@@ -90,20 +90,31 @@ class Character extends MoveableObject {
     "img/2_character_pepe/5_dead/D-57.png"
   ];
 
+  /**
+   * @param {*} world
+   */
   constructor(world) {
-    super().loadImage("img/2_character_pepe/3_jump/J-37.png");
-    this.loadImages(this.IMAGES_IDLE);
-    this.loadImages(this.IMAGES_LONG_IDLE);
-    this.loadImages(this.IMAGES_WALKING);
-    this.loadImages(this.IMAGES_JUMPING);
-    this.loadImages(this.IMAGES_HURT);
-    this.loadImages(this.IMAGES_DEAD);
-
+    super().loadImage('img/2_character_pepe/1_idle/idle/I-1.png');
+    this.loadAllCharacterImages();
     this.world = world;
     this.applyGravity();
-
-    // Methoden sind in character.anim.js und character.control.js (Prototype-Split)
     this.animate();
+  }
+
+  /**
+   * Loads all animation image sets for the character.
+   * @returns {void}
+   */
+  loadAllCharacterImages() {
+    const sets = [
+      this.IMAGES_IDLE,
+      this.IMAGES_LONG_IDLE,
+      this.IMAGES_WALKING,
+      this.IMAGES_JUMPING,
+      this.IMAGES_HURT,
+      this.IMAGES_DEAD
+    ];
+    for (const set of sets) this.loadImages(set);
   }
 
   /**

@@ -15,24 +15,77 @@ World.prototype.destroy = function () {
 };
 
 World.prototype.gameOver = function (win = true) {
-  this.isDestroyed = true;
-  this.character.speed = 0;
-  this.character.stopAnimation();
-  this.level.endboss[0].speed = 0;
+  this._freezeActorsForGameOver();
+  this._cleanupWorldForGameOver();
+  this._showGameOver(win);
+};
 
-  if (this.level.endboss[0].walkAnimation && !this.level.endboss[0].isDead()) {
-    this.level.endboss[0].destructor();
-  }
+World.prototype._resetWorldCounters = function () {
+  this.coin_collected = 0;
+  this.bottle_collected = 0;
+};
 
+
+World.prototype._destroyWorldEntities = function () {
+  this.destroyCharacter();
+  this.destroyBars();
+  this.destroyCoins();
+  this.destroyThrowableObject();
+  this.destroyLevelEnemies();
+  this.level = [];
+};
+
+
+World.prototype._nullOutWorldRefs = function () {
+  this.ctx = null;
+  this.canvas = null;
+  this.keyboard = null;
+};
+
+
+World.prototype._clearWorldTimers = function () {
+  clearInterval(this.runInterval);
+  cancelAnimationFrame(this.requestId);
+  this.requestId = null;
+};
+
+
+World.prototype._showGameOver = function (win) {
+  this.gameOverCelebration(win);
+  showGameOverScreen(win);
+};
+
+
+World.prototype._cleanupWorldForGameOver = function () {
   this.destroyClouds();
   this.destroyCoins();
   this.destroyThrowableObject();
   this.destroyLevelEnemies();
   this.stopLoops();
   pauseAllSounds();
-  this.gameOverCelebration(win);
-  showGameOverScreen(win);
 };
+
+
+World.prototype._stopEndbossForGameOver = function () {
+  const boss = this.level.endboss[0];
+  boss.speed = 0;
+  if (boss.walkAnimation && !boss.isDead()) boss.destructor();
+};
+
+
+World.prototype._stopCharacterForGameOver = function () {
+  this.character.speed = 0;
+  this.character.stopAnimation();
+};
+
+
+World.prototype._freezeActorsForGameOver = function () {
+  this.isDestroyed = true;
+  this._stopCharacterForGameOver();
+  this._stopEndbossForGameOver();
+};
+
+;
 
 World.prototype.gameOverCelebration = function (win) {
   if (win) {
@@ -45,25 +98,12 @@ World.prototype.gameOverCelebration = function (win) {
 };
 
 World.prototype.destructor = function () {
-  clearInterval(this.runInterval);
-  cancelAnimationFrame(this.requestId);
-  this.requestId = null;
-
-  this.ctx = null;
-  this.canvas = null;
-  this.keyboard = null;
-
-  this.destroyCharacter();
-  this.destroyBars();
-  this.destroyCoins();
-
-  this.coin_collected = 0;
-  this.bottle_collected = 0;
-
-  this.destroyThrowableObject();
-  this.destroyLevelEnemies();
-  this.level = [];
+  this._clearWorldTimers();
+  this._nullOutWorldRefs();
+  this._destroyWorldEntities();
+  this._resetWorldCounters();
 };
+;
 
 World.prototype.destroyLevelEnemies = function () {
   this.level.enemies.forEach(enemy => {

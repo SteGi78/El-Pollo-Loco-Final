@@ -47,21 +47,17 @@ function restartGame() {
  * - blendet StartScreen ein
  * - optional kann hier Musik neu gestartet werden etc.
  */
+/**
+ * Stops the current run and returns to the start screen.
+ * @returns {void}
+ */
 function returnToMenu() {
-  const over = document.getElementById('gameOverScreen');
-  hideElement(over);
+  hideElement(document.getElementById('gameOverScreen'));
   pauseAllSounds(true);
-
-  if (typeof stopCurrentWorld === 'function') {
-    stopCurrentWorld();
-  }
-
-  // zurück im Menü -> Mobile-Steuerung ausblenden
+  if (typeof stopCurrentWorld === 'function') stopCurrentWorld();
   document.body.classList.remove('is-playing');
   if (typeof adjustControls === 'function') adjustControls();
-
-  const start = document.getElementById('startScreen');
-  showElementGrid(start);
+  showElementGrid(document.getElementById('startScreen'));
 }
 
 /**

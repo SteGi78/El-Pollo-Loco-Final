@@ -1,99 +1,113 @@
 /**
  * Mobile-/Touch-Steuerung (Buttons)
  *
- * Problem bisher: Buttons werden per Template nachgeladen (fetch) ->
- * bindMobileControls() lief zu früh und hat keine Listener gesetzt.
- *
- * Fix:
- * - Bindings erst nach Event 'epl:templates-loaded'
- * - Pointer Events (decken Touch + Maus ab)
- * - Schutz gegen Mehrfach-Bindings
+ * WICHTIG:
+ * Die Buttons werden per Template nachgeladen (fetch). Deshalb binden wir die Listener erst,
+ * wenn das Event 'epl:templates-loaded' gefeuert wurde.
  */
 
-(function () {
-  function bindMobileControls() {
-    if (window.__eplMobileControlsBound) return;
+/**
+ * Binds mobile controls once (idempotent).
+ * @returns {void}
+ */
+function bindMobileControls() {
+  if (window.__eplMobileControlsBound) return;
 
-    const btnLeft = document.getElementById('btnLeft');
-    const btnRight = document.getElementById('btnRight');
-    const btnJump = document.getElementById('btnJump');
-    const btnAction = document.getElementById('btnAction');
+  const buttons = getMobileButtons();
+  if (!buttons) return;
 
-    if (!btnLeft || !btnRight || !btnJump || !btnAction) return;
+  bindAllButtons(buttons);
+  window.__eplMobileControlsBound = true;
+}
 
-    // Helper: setzt Keyboard-Flags sicher
-    function setKey(propName, value) {
-      if (window.keyboard && Object.prototype.hasOwnProperty.call(window.keyboard, propName)) {
-        window.keyboard[propName] = value;
-      } else if (window.keyboard) {
-        // fallback: falls Keyboard-Klasse die Property nicht vorab definiert
-        window.keyboard[propName] = value;
-      }
-    }
+/**
+ * Reads required button elements from the DOM.
+ * @returns {{btnLeft: HTMLElement, btnRight: HTMLElement, btnJump: HTMLElement, btnAction: HTMLElement} | null}
+ */
+function getMobileButtons() {
+  const btnLeft = document.getElementById('btnLeft');
+  const btnRight = document.getElementById('btnRight');
+  const btnJump = document.getElementById('btnJump');
+  const btnAction = document.getElementById('btnAction');
 
-    function bindPress(button, propName) {
-      // Pointer Events: Touch + Maus + Stift
-      button.addEventListener(
-        'pointerdown',
-        (e) => {
-          // verhindert Scroll/Zoom-Gesten beim Drücken
-          e.preventDefault();
-          button.setPointerCapture?.(e.pointerId);
-          setKey(propName, true);
-        },
-        { passive: false }
-      );
+  if (!btnLeft || !btnRight || !btnJump || !btnAction) return null;
+  return { btnLeft, btnRight, btnJump, btnAction };
+}
 
-      const release = (e) => {
-        e.preventDefault();
-        setKey(propName, false);
-      };
+/**
+ * Binds press interactions for all mobile buttons.
+ * @param {{btnLeft: HTMLElement, btnRight: HTMLElement, btnJump: HTMLElement, btnAction: HTMLElement}} buttons
+ * @returns {void}
+ */
+function bindAllButtons(buttons) {
+  bindPress(buttons.btnLeft, 'LEFT');
+  bindPress(buttons.btnRight, 'RIGHT');
+  bindPress(buttons.btnJump, 'UP');
+  bindPress(buttons.btnAction, 'D'); // D = throw
+}
 
-      button.addEventListener('pointerup', release, { passive: false });
-      button.addEventListener('pointercancel', release, { passive: false });
-      button.addEventListener('pointerleave', release, { passive: false });
+/**
+ * Updates the global keyboard flags.
+ * @param {string} propName
+ * @param {boolean} value
+ * @returns {void}
+ */
+function setKeyboardFlag(propName, value) {
+  const kb = window.keyboard;
+  if (!kb) return;
 
-      // iOS/Older: Touch-Fallback (falls Pointer Events deaktiviert/buggy)
-      button.addEventListener(
-        'touchstart',
-        (e) => {
-          e.preventDefault();
-          setKey(propName, true);
-        },
-        { passive: false }
-      );
-      button.addEventListener(
-        'touchend',
-        (e) => {
-          e.preventDefault();
-          setKey(propName, false);
-        },
-        { passive: false }
-      );
-
-      // Long-Press Menü verhindern
-      button.addEventListener('contextmenu', (e) => e.preventDefault());
-    }
-
-    bindPress(btnLeft, 'LEFT');
-    bindPress(btnRight, 'RIGHT');
-    bindPress(btnJump, 'UP');
-    bindPress(btnAction, 'D'); // D = throw (wie in vielen EPL-Versionen)
-
-    window.__eplMobileControlsBound = true;
+  if (Object.prototype.hasOwnProperty.call(kb, propName) || propName in kb) {
+    kb[propName] = value;
   }
+}
 
-  // 1) Falls Templates schon da sind (z. B. Cache/Sehr schnell): direkt versuchen
-  if (document.readyState !== 'loading') {
-    bindMobileControls();
-  }
+/**
+ * Binds press (pointer) events to a button element.
+ * @param {HTMLElement} button
+ * @param {string} keyName
+ * @returns {void}
+ */
+function bindPress(button, keyName) {
+  addPointerListener(button, 'pointerdown', () => setKeyboardFlag(keyName, true));
+  addPointerListener(button, 'pointerup', () => setKeyboardFlag(keyName, false));
+  addPointerListener(button, 'pointercancel', () => setKeyboardFlag(keyName, false));
+  addPointerListener(button, 'pointerleave', () => setKeyboardFlag(keyName, false));
+  preventContextMenu(button);
+}
 
-  // 2) Sicher: nach Template-Load
-  window.addEventListener('epl:templates-loaded', bindMobileControls);
+/**
+ * Adds a pointer listener and prevents default browser behavior (touch scrolling etc.).
+ * @param {HTMLElement} button
+ * @param {string} eventName
+ * @param {Function} handler
+ * @returns {void}
+ */
+function addPointerListener(button, eventName, handler) {
+  button.addEventListener(
+    eventName,
+    (e) => {
+      e.preventDefault();
+      handler(e);
+    },
+    { passive: false }
+  );
+}
 
-  // 3) Fallback: DOMContentLoaded (für den Fall, dass das Template-Event ausbleibt)
-  document.addEventListener('DOMContentLoaded', () => {
-    // kleines Delay, damit fetch-Insert fertig sein kann
-    setTimeout(bindMobileControls, 0);
-  });
-})();
+/**
+ * Prevents long-press context menu on mobile.
+ * @param {HTMLElement} button
+ * @returns {void}
+ */
+function preventContextMenu(button) {
+  button.addEventListener('contextmenu', (e) => e.preventDefault());
+}
+
+if (document.readyState !== 'loading') {
+  bindMobileControls();
+}
+
+window.addEventListener('epl:templates-loaded', bindMobileControls);
+
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(bindMobileControls, 0);
+});

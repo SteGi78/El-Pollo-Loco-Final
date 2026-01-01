@@ -70,16 +70,10 @@ Endboss.prototype.updateStatusBar = function () {
  */
 Endboss.prototype.hit = function () {
   this.hurtSound();
-
   if (this._bottleHits == null) this._bottleHits = 0;
   this._bottleHits += 1;
-
-  // mark as recently hit (used for hurt state)
-  this.lastHit = new Date().getTime();
-
-  // reduce energy only on every 2nd bottle
-  if (this._bottleHits % 2 === 0) {
-    this.energy -= 20;
-    if (this.energy <= 0) this.energy = 0;
-  }
+  this.lastHit = Date.now();
+  if (this._bottleHits % 2 !== 0) return;
+  this.energy = Math.max(0, this.energy - 20);
 };
+;

@@ -24,23 +24,78 @@ World.prototype.isCollisionFromAbove = function (enemy) {
 };
 
 World.prototype.enemyDeath = function (index, enemy) {
-    // Stop any running animations/intervals first
-    if (enemy && typeof enemy.stopAnimation === 'function') enemy.stopAnimation();
-    if (enemy && typeof enemy.destructor === 'function') enemy.destructor();
-
-    // Ensure dead sprite is a real path (not an array)
-    let deadImg = null;
-    if (enemy && Array.isArray(enemy.IMG_DEAD)) deadImg = enemy.IMG_DEAD[0];
-    else if (enemy && enemy.IMG_DEAD) deadImg = enemy.IMG_DEAD;
-
-    if (deadImg) enemy.loadImage(deadImg);
-
-    // Remove the enemy from the level after a short delay
-    setTimeout(() => {
-        const currentIndex = this.level.enemies.indexOf(enemy);
-        if (currentIndex > -1) this.level.enemies.splice(currentIndex, 1);
-    }, 200);
+  this._stopEnemy(enemy);
+  const deadImg = this._getEnemyDeadImage(enemy);
+  if (deadImg) enemy.loadImage(deadImg);
+  this._scheduleEnemyRemoval(enemy);
 };
+
+World.prototype._handleCharacterDeathAfterCollision = function () {
+  if (!this.character.isDead()) return false;
+  this.level.endboss[0].speed = 0;
+  setTimeout(() => this.gameOver(false), 700);
+  return true;
+};
+
+
+World.prototype._handleBossDeathAfterCollision = function () {
+  if (!this.level.endboss[0].isDead()) return false;
+  playSound(SOUNDS.bossDead, false, 1000);
+  this.character.speed = 0;
+  setTimeout(() => this.gameOver(), 1000);
+  return true;
+};
+
+
+World.prototype._bottleHitsEnemy = function (bottle) {
+  for (const enemy of this.level.enemies) {
+    if (enemy.isColliding(bottle) && !enemy.isDead() && !bottle.hasCollided) {
+      enemy.hit();
+      this.shatterBottle(bottle);
+      break;
+    }
+  }
+};
+
+
+World.prototype._bottleHitsEndboss = function (bottle) {
+  const boss = this.level.endboss[0];
+  if (!boss || !boss.isColliding(bottle) || bottle.hasCollided) return false;
+  boss.hit();
+  boss.updateStatusBar?.();
+  this.shatterBottle(bottle);
+  return true;
+};
+
+
+World.prototype._checkBottleCollision = function (bottle) {
+  if (bottle.isSplashed || bottle.hasCollided) return;
+  if (this._bottleHitsEndboss(bottle)) return;
+  this._bottleHitsEnemy(bottle);
+};
+
+
+World.prototype._scheduleEnemyRemoval = function (enemy) {
+  setTimeout(() => {
+    const idx = this.level.enemies.indexOf(enemy);
+    if (idx > -1) this.level.enemies.splice(idx, 1);
+  }, 200);
+};
+
+
+World.prototype._getEnemyDeadImage = function (enemy) {
+  if (!enemy) return null;
+  if (Array.isArray(enemy.IMG_DEAD)) return enemy.IMG_DEAD[0] || null;
+  return enemy.IMG_DEAD || null;
+};
+
+
+World.prototype._stopEnemy = function (enemy) {
+  if (enemy && typeof enemy.stopAnimation === "function") enemy.stopAnimation();
+  if (enemy && typeof enemy.destructor === "function") enemy.destructor();
+};
+
+;
 
 World.prototype.checkCollisionsWithEndboss = function () {
     let endBoss = this.level.endboss[0];
@@ -53,23 +108,9 @@ World.prototype.checkCollisionsWithEndboss = function () {
 };
 
 World.prototype.checkBottleCollided = function () {
-    this.throwableObjects.forEach(bottle => {
-        if (!bottle.isSplashed) {
-            if (this.level.endboss[0].isColliding(bottle) && !bottle.hasCollided) {
-                this.level.endboss[0].hit();
-                if (typeof this.level.endboss[0].updateStatusBar === 'function') this.level.endboss[0].updateStatusBar();
-                this.shatterBottle(bottle);
-            } else {
-                this.level.enemies.forEach(enemy => {
-                    if (enemy.isColliding(bottle) && !enemy.isDead() && !bottle.hasCollided) {
-                        enemy.hit();
-                        this.shatterBottle(bottle);
-                    }
-                });
-            }
-        }
-    });
+  for (const bottle of this.throwableObjects) this._checkBottleCollision(bottle);
 };
+;
 
 World.prototype.shatterBottle = function (bottle) {
     bottle.isSplashed = true;
@@ -93,21 +134,11 @@ World.prototype.checkBottleSplashed = function () {
 };
 
 World.prototype.checkDeathsAfterCollision = function () {
-    if (this.level.endboss[0].isDead()) {
-        playSound(SOUNDS.bossDead, false, 1000);
-        this.character.speed = 0;
-        setTimeout(() => {
-            this.gameOver();
-        }, 1000);
-    } else if (this.character.isDead()) {
-        this.level.endboss[0].speed = 0;
-        setTimeout(() => {
-            this.gameOver(false);
-        }, 700);
-    } else if (this.level.enemies.length > 0) {
-        this.checkEnemiesDeaths();
-    }
+  if (this._handleBossDeathAfterCollision()) return;
+  if (this._handleCharacterDeathAfterCollision()) return;
+  if (this.level.enemies.length > 0) this.checkEnemiesDeaths();
 };
+;
 
 World.prototype.checkEnemiesDeaths = function () {
     for (const enemy of this.level.enemies) {

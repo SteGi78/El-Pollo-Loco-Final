@@ -3,39 +3,54 @@
 // ============================================================
 
 World.prototype.draw = function () {
-    if (this.isDestroyed) return;
-
-    // IMPORTANT:
-    // Use an integer camera translation to avoid sub-pixel rendering.
-    // Sub-pixel camera movement is the #1 reason for visible 1px seams
-    // between tiled background images when the canvas is CSS-scaled.
-    const cam = Math.round(this.cam_x);
-
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-    // 1) World-space: Background / Clouds / Enemies / Collectables
-    this.ctx.save();
-    this.ctx.translate(cam, 0);
-    this.drawBasicObjs();
-    this.drawEnemies();
-    this.drawCollectableObjs();
-    this.ctx.restore();
-
-    // 2) Screen-space UI (Bars etc.)
-    this.drawFixedObjs();
-
-    // 3) Foreground world-space: Character + Projectiles on top of UI
-    // (Feedback: Pepe soll nicht "hinter" die Bars springen können.)
-    this.ctx.save();
-    this.ctx.translate(cam, 0);
-    this.drawForegroundObjs();
-    this.ctx.restore();
-
-    this.requestId = requestAnimationFrame(() => {
-        this.draw();
-        this.checkOtherDirection();
-    });
+  if (this.isDestroyed) return;
+  const cam = this._getSnappedCameraX();
+  this._clearCanvas();
+  this._drawWorldLayer(cam);
+  this.drawFixedObjs();
+  this._drawForegroundLayer(cam);
+  this._scheduleNextFrame();
 };
+
+World.prototype._renderFrame = function () {
+  this.draw();
+  this.checkOtherDirection();
+};
+
+
+World.prototype._scheduleNextFrame = function () {
+  this.requestId = requestAnimationFrame(() => this._renderFrame());
+};
+
+
+World.prototype._drawForegroundLayer = function (cam) {
+  this.ctx.save();
+  this.ctx.translate(cam, 0);
+  this.drawForegroundObjs();
+  this.ctx.restore();
+};
+
+
+World.prototype._drawWorldLayer = function (cam) {
+  this.ctx.save();
+  this.ctx.translate(cam, 0);
+  this.drawBasicObjs();
+  this.drawEnemies();
+  this.drawCollectableObjs();
+  this.ctx.restore();
+};
+
+
+World.prototype._clearCanvas = function () {
+  this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+};
+
+
+World.prototype._getSnappedCameraX = function () {
+  return (this.cam_x ?? this.camera_x ?? 0) | 0;
+};
+
+;
 
 World.prototype.drawBasicObjs = function () {
     this.addObjsToMap(this.level.backgroundObjects);

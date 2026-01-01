@@ -91,31 +91,65 @@ function applyMuteStateToAllSounds() {
  * @param {boolean} force - Bei true wird trotz Mute abgespielt.
  * @param {number} delayMs - Optionaler Delay in ms.
  */
+/**
+ * Plays a sound by reference.
+ * @param {string|HTMLAudioElement} soundRef
+ * @param {boolean} [force=false] - Ignores global mute if true.
+ * @param {number} [delayMs=0] - Optional delay before playback.
+ * @returns {void}
+ */
 function playSound(soundRef, force = false, delayMs = 0) {
   const audio = resolveSound(soundRef);
   if (!audio) return;
 
-  const play = () => {
-    // WICHTIG: Mute-Status zum Playback-Zeitpunkt prüfen (auch bei Delays)
-    if (!force && isMuted) {
-      audio.pause();
-      audio.muted = true;
-      audio.volume = 0;
-      return;
-    }
-
-    audio.currentTime = 0;
-    audio.muted = false;
-    const baseVolume = parseFloat(audio.dataset.baseVolume ?? 1);
-    audio.volume = baseVolume;
-    audio.play().catch(() => {});
-  };
-
   if (delayMs > 0) {
-    setTimeout(play, delayMs);
-  } else {
-    play();
+    setTimeout(playResolvedAudio, delayMs, audio, force);
+    return;
   }
+  playResolvedAudio(audio, force);
+}
+
+/**
+ * Executes the actual playback after resolving mute/volume state.
+ * @param {HTMLAudioElement} audio
+ * @param {boolean} force
+ * @returns {void}
+ */
+function playResolvedAudio(audio, force) {
+  if (!force && isMuted) return muteAudio(audio);
+  prepareAudioForPlayback(audio);
+  audio.play().catch(() => {});
+}
+
+/**
+ * Prepares an audio element for clean playback.
+ * @param {HTMLAudioElement} audio
+ * @returns {void}
+ */
+function prepareAudioForPlayback(audio) {
+  audio.currentTime = 0;
+  audio.muted = false;
+  audio.volume = getBaseVolume(audio);
+}
+
+/**
+ * Mutes an audio element immediately.
+ * @param {HTMLAudioElement} audio
+ * @returns {void}
+ */
+function muteAudio(audio) {
+  audio.pause();
+  audio.muted = true;
+  audio.volume = 0;
+}
+
+/**
+ * Reads the base volume stored on the audio element.
+ * @param {HTMLAudioElement} audio
+ * @returns {number}
+ */
+function getBaseVolume(audio) {
+  return parseFloat(audio.dataset.baseVolume ?? 1);
 }
 
 /**
@@ -150,30 +184,48 @@ function updateMuteButtonUI() {
  * Schaltet den globalen Sound an/aus.
  * Speichert außerdem den Zustand in localStorage.
  */
+/**
+ * Toggles global mute and persists the state.
+ * @returns {void}
+ */
 function toggleMute() {
-  // Wenn wir gerade muten: merken, ob die Hintergrundmusik läuft.
-  if (!isMuted) {
-    const game = SOUNDS.game;
-    resumeGameAfterUnmute = !!(game && !game.paused);
-  }
-
+  rememberGameMusicStateBeforeMute();
   isMuted = !isMuted;
   applyMuteStateToAllSounds();
   updateMuteButtonUI();
-  localStorage.setItem('muted', isMuted ? '1' : '0');
+  saveMuteStateToStorage();
+  resumeGameMusicAfterUnmute();
+}
 
-  // Wenn wir entmuten: Hintergrundmusik ggf. wieder starten (ohne currentTime zu resetten).
-  if (!isMuted) {
-    const game = SOUNDS.game;
-    const shouldResume = resumeGameAfterUnmute || !!window._gameMusicShouldPlay;
-    if (game && shouldResume) {
-      const baseVolume = parseFloat(game.dataset.baseVolume ?? 1);
-      game.muted = false;
-      game.volume = baseVolume;
-      game.play().catch(() => {});
-    }
-    resumeGameAfterUnmute = false;
-  }
+/**
+ * Remembers if game music was playing right before muting.
+ * @returns {void}
+ */
+function rememberGameMusicStateBeforeMute() {
+  if (isMuted) return;
+  const game = SOUNDS.game;
+  resumeGameAfterUnmute = !!(game && !game.paused);
+}
+
+/**
+ * Saves the mute state to localStorage.
+ * @returns {void}
+ */
+function saveMuteStateToStorage() {
+  localStorage.setItem('muted', isMuted ? '1' : '0');
+}
+
+/**
+ * Resumes game music after unmuting, if it should be playing.
+ * @returns {void}
+ */
+function resumeGameMusicAfterUnmute() {
+  if (isMuted) return;
+
+  const game = SOUNDS.game;
+  const shouldResume = resumeGameAfterUnmute || !!window._gameMusicShouldPlay;
+  if (game && shouldResume) playResolvedAudio(game, true);
+  resumeGameAfterUnmute = false;
 }
 
 /**

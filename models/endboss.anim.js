@@ -6,26 +6,71 @@
  * Function to manage the animations and movements.
  */
 Endboss.prototype.animate = function () {
-  this.runInterval = setInterval(() => {
-    // World wird erst nach der Instanziierung gesetzt (World.setWorld()).
-    // Schutz gegen Race-Condition: ohne Guard crasht das Spiel im iPad/Reload.
-    if (!this.world || !this.world.character) {
-      return;
-    }
+  this._startBossLoop();
+  this._startAlertAnimation();
+};
 
-    if (this.isDead()) {
-      this.runDeathConditions();
-    } else if (this.isHurt() && this.newHit()) {
-      this.runHurtConditions();
-    } else if (this.world.isCharacterTooFar && !this.world.isCharacterTooFar(this) && !this.bossIntro) {
-      this.runIntroConditions();
-    } else if (this.isColliding(this.world.character) && !this.isDead()) {
-      this.isAttacking();
-    }
-  }, 150);
+Endboss.prototype._finishHurting = function () {
+  this.hurtAnimation = this.cancelAnimation(this.hurtAnimation);
+  if (this.isDead()) return;
+  this.restoreSpeed();
+  this.isWalking();
+  this.booster += 15;
+};
 
+
+Endboss.prototype._handleBossAttack = function () {
+  if (!this.isColliding(this.world.character) || this.isDead()) return;
+  this.isAttacking();
+};
+
+
+Endboss.prototype._handleBossIntro = function () {
+  if (this.bossIntro || !this.world.isCharacterTooFar) return false;
+  if (this.world.isCharacterTooFar(this)) return false;
+  this.runIntroConditions();
+  return true;
+};
+
+
+Endboss.prototype._handleBossHurt = function () {
+  if (!this.isHurt() || !this.newHit()) return false;
+  this.runHurtConditions();
+  return true;
+};
+
+
+Endboss.prototype._handleBossDeath = function () {
+  if (!this.isDead()) return false;
+  this.runDeathConditions();
+  return true;
+};
+
+
+Endboss.prototype._isWorldReady = function () {
+  return !!(this.world && this.world.character);
+};
+
+
+Endboss.prototype._tickBoss = function () {
+  if (!this._isWorldReady()) return;
+  if (this._handleBossDeath()) return;
+  if (this._handleBossHurt()) return;
+  if (this._handleBossIntro()) return;
+  this._handleBossAttack();
+};
+
+
+Endboss.prototype._startAlertAnimation = function () {
   this.animationIntervals = this.playAnimation(this.IMAGES_ALERT, 500);
 };
+
+
+Endboss.prototype._startBossLoop = function () {
+  this.runInterval = setInterval(() => this._tickBoss(), 150);
+};
+
+;
 
 /**
  * Function to handle the walking animation.
@@ -41,20 +86,12 @@ Endboss.prototype.isWalking = function () {
  * Function to handle the hurting animation.
  */
 Endboss.prototype.isHurting = function () {
-  if (!this.hurtAnimation && !this.isDead()) {
-    this.cancelAllAnimations();
-    this.hurtAnimation = this.playAnimation(this.IMAGES_HURT, 200);
-
-    setTimeout(() => {
-      this.hurtAnimation = this.cancelAnimation(this.hurtAnimation);
-      if (!this.isDead()) {
-        this.restoreSpeed();
-        this.isWalking();
-        this.booster += 15;
-      }
-    }, 1200);
-  }
+  if (this.hurtAnimation || this.isDead()) return;
+  this.cancelAllAnimations();
+  this.hurtAnimation = this.playAnimation(this.IMAGES_HURT, 200);
+  setTimeout(() => this._finishHurting(), 1200);
 };
+;
 
 /**
  * Function to handle the attacking animation.

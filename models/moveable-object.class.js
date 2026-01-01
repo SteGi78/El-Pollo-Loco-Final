@@ -15,21 +15,37 @@ class MoveableObject extends DrawableObject {
     /**
      * Function to apply gravity to the moveable object.
      */
-    applyGravity() {
-        if (this.gravityInterval) clearInterval(this.gravityInterval);
-        this.gravityInterval = setInterval(() => {
-            if (!(this instanceof ThrowableObject)) {
-                if (this.isAboveGround() || this.speedY > 0) {
-                    this.y -= this.speedY;
-                    this.speedY -= this.acceleration;
-                }
-                if (this.y > 180)
-                    this.y = 180
-            } else {
-                this.isBottleSplashed();
-            }
-        }, 1000 / 25);
+  /**
+   * Starts the gravity loop for this object (25 FPS).
+   * @returns {void}
+   */
+  applyGravity() {
+    this.clearGravityInterval();
+    this.gravityInterval = setInterval(this.gravityTick.bind(this), 1000 / 25);
+  }
+
+  /**
+   * Clears an existing gravity interval.
+   * @returns {void}
+   */
+  clearGravityInterval() {
+    if (this.gravityInterval) clearInterval(this.gravityInterval);
+  }
+
+  /**
+   * One gravity tick.
+   * @returns {void}
+   */
+  gravityTick() {
+    if (this instanceof ThrowableObject) return this.isBottleSplashed();
+
+    if (this.isAboveGround() || this.speedY > 0) {
+      this.y -= this.speedY;
+      this.speedY -= this.acceleration;
     }
+
+    if (this.y > 180) this.y = 180;
+  }
 
     /**
      * Function to check if bottle is splashed.
