@@ -1,0 +1,28 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Node (if used later)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Build outputs
+dist/
+build/
+.cache/
+.temp/
+coverage/
+
+# Editor
+.vscode/
+.idea/
+*.local
+
+# Misc
+*.zip
+
+img/1_editables/
+

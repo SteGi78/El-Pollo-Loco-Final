@@ -1,0 +1,44 @@
+/* ==== El Pollo Loco - Layout & Sharpness Patch (non-destructive) ==== */
+
+/* 1) Neutraler Seitenhintergrund & zentrierter Canvas */
+html, body { height: 100%; }
+body {
+  margin: 0;
+  background: #0d0d0d;                 /* statt großem Seiten-BG-Bild */
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+/* 2) Canvas-Wrapper für sauberes Scaling (16:9) */
+.epl-wrap {
+  position: relative;
+  width: min(96vw, 1280px);
+  aspect-ratio: 16 / 9;
+  background: #000;                     /* Fallback, bis Level-BG gezeichnet ist */
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0,0,0,.45);
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+}
+
+#canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  image-rendering: pixelated;           /* scharfe Sprites */
+  image-rendering: crisp-edges;
+}
+
+/* 3) HUD/Screens sauber über dem Canvas */
+.screen, #mobileControls, .ui-btn, footer, dialog#instructionsDialog {
+  position: relative;
+  z-index: 5;
+}
+
+/* 4) Doppelte MobileControls vermeiden -> der Entwickler behält nur EINE Instanz */
+#mobileControls:empty { display: none; }
+
+/* 5) Body-Hintergrundbilder von bestehender CSS neutralisieren (falls gesetzt) */
+body::before, body::after { content: none !important; }

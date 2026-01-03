@@ -1,0 +1,109 @@
+/* ============================================
+   El Pollo Loco – responsive.css
+   Alle @media-Regeln gebündelt
+   ============================================ */
+
+/* Start-Fenster an Desktop nach rechts/oben verschieben,
+   damit es nicht über der großen EL POLLO LOCO Schrift sitzt */
+@media (min-width: 900px) {
+  #startScreen .screen__inner {
+    justify-self: end;
+    align-self: start;
+    margin-top: 4vh;
+    margin-right: 4vw;
+    max-width: 300px;
+  }
+}
+
+/* Touch-Controls: Sichtbarkeit wird per JS gesteuert (body.is-mobile-ui).
+   Hier bleiben nur Größen-/Layout-Anpassungen in @media. */
+
+/* =========================================================
+   Mobile-Layout (Landscape)
+   Ziel: Spielfeld so groß wie möglich, ohne Verzerrung.
+   ========================================================= */
+@media (max-width: 900px) {
+  main {
+    padding: 0;
+    min-height: 100dvh;
+  }
+
+  .epl-wrap {
+    /* maximal breit/hoch im Viewport, ohne das 3:2-Verhältnis zu brechen */
+    width: min(100vw, calc(100dvh * 3 / 2));
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  footer.footer-legal {
+    display: none;
+  }
+
+  /* Buttons etwas kompakter auf kleinen Geräten */
+  .mc-btn {
+    width: clamp(44px, 9vh, 56px);
+    height: clamp(44px, 9vh, 56px);
+    font-size: clamp(1.4rem, 4vh, 2rem);
+  }
+}
+
+/* RESPONSIVE FINETUNE */
+@media (max-width: 900px) {
+  #startScreen .screen__inner {
+    padding: 18px 8vw;
+    font-size: 1rem;
+    max-width: min(90%, 400px);
+    margin: 0;
+    justify-self: center;
+    align-self: center;
+  }
+}
+
+@media (max-width: 600px) {
+  #startScreen .screen__inner {
+    font-size: 1rem;
+    padding: 10px 2vw;
+  }
+}
+
+/* =========================================================
+   Fullscreen
+   - Bühne maximal groß, ohne Verzerrung (3:2 letterboxed)
+   - Startscreen im Fullscreen wieder zentriert (Desktop-Rule wird überschrieben)
+   ========================================================= */
+
+/* Standard */
+:fullscreen main {
+  padding: 0;
+}
+
+:fullscreen .epl-wrap {
+  width: min(100vw, calc(100vh * 3 / 2));
+  border-radius: 0;
+  box-shadow: none;
+}
+
+:fullscreen #startScreen .screen__inner {
+  justify-self: center;
+  align-self: center;
+  margin: 0;
+  max-width: min(90%, 400px);
+}
+
+/* Safari/iOS */
+:-webkit-full-screen main {
+  padding: 0;
+}
+
+:-webkit-full-screen .epl-wrap {
+  width: min(100vw, calc(100vh * 3 / 2));
+  border-radius: 0;
+  box-shadow: none;
+}
+
+:-webkit-full-screen #startScreen .screen__inner {
+  justify-self: center;
+  align-self: center;
+  margin: 0;
+  max-width: min(90%, 400px);
+}
