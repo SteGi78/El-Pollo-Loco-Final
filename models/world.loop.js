@@ -1,3 +1,11 @@
+/**
+ * Datei: merge/models/world.loop.js
+ * Beschreibung: Teil des Browser-Spiels „El Pollo Loco“. Enthält Logik, Klassen und/oder Hilfsfunktionen.
+ * Hinweis: Wird im Frontend (HTML/CSS/JavaScript) ausgeführt.
+ * @author Stephan Gilles
+ * @date 03.01.2026
+ */
+
 // ============================================================
 //  World Loop / Throw / Boss-Escape
 // ============================================================
@@ -65,7 +73,6 @@ World.prototype._shouldThrowBottle = function () {
   return this.keyboard.D && this.canThrowObject();
 };
 
-;
 
 World.prototype.downgradeBottleBar = function () {
   // kompatibel behalten: alter Name, neue Logik

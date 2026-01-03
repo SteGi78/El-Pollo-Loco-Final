@@ -1,3 +1,11 @@
+/**
+ * Datei: merge/models/world.lifecycle.js
+ * Beschreibung: Teil des Browser-Spiels „El Pollo Loco“. Enthält Logik, Klassen und/oder Hilfsfunktionen.
+ * Hinweis: Wird im Frontend (HTML/CSS/JavaScript) ausgeführt.
+ * @author Stephan Gilles
+ * @date 03.01.2026
+ */
+
 // ============================================================
 //  World Lifecycle / GameOver / Cleanup
 // ============================================================
@@ -85,7 +93,6 @@ World.prototype._freezeActorsForGameOver = function () {
   this._stopEndbossForGameOver();
 };
 
-;
 
 World.prototype.gameOverCelebration = function (win) {
   if (win) {
@@ -103,7 +110,6 @@ World.prototype.destructor = function () {
   this._destroyWorldEntities();
   this._resetWorldCounters();
 };
-;
 
 World.prototype.destroyLevelEnemies = function () {
   this.level.enemies.forEach(enemy => {

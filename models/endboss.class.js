@@ -1,8 +1,15 @@
-function getAvailableStatusbarValue(val) {
-  const available = [0, 20, 40, 60, 80, 100];
-  return Math.max(...available.filter(v => v <= val));
-}
+/**
+ * Datei: merge/models/endboss.class.js
+ * Beschreibung: Teil des Browser-Spiels „El Pollo Loco“. Enthält Logik, Klassen und/oder Hilfsfunktionen.
+ * Hinweis: Wird im Frontend (HTML/CSS/JavaScript) ausgeführt.
+ * @author Stephan Gilles
+ * @date 03.01.2026
+ */
 
+/**
+ * Klasse Endboss.
+ * @class
+ */
 class Endboss extends MoveableObject {
   x = 5500;
   y = 60;
@@ -78,7 +85,8 @@ class Endboss extends MoveableObject {
   }
 
   /**
-   * Function to clear all running animations.
+   * Methode destructor.
+   * @returns {any}
    */
   destructor() {
     clearInterval(this.runInterval);

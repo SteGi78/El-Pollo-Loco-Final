@@ -1,3 +1,10 @@
+/**
+ * Datei: merge/js/game.js
+ * Beschreibung: Teil des Browser-Spiels „El Pollo Loco“. Enthält Logik, Klassen und/oder Hilfsfunktionen.
+ * Hinweis: Wird im Frontend (HTML/CSS/JavaScript) ausgeführt.
+ * @author Stephan Gilles
+ * @date 03.01.2026
+ */
 
 let canvas;
 let world;
@@ -15,15 +22,28 @@ window.init = function (restart = false) {
   finalizeInit();
 };
 
+/**
+ * Funktion prepareInit.
+ * @param {any} restart - Parameter.
+ * @returns {any}
+ */
 function prepareInit(restart) {
   if (restart) return resetGame();
   stopCurrentWorld();
 }
 
+/**
+ * Funktion getCanvas.
+ * @returns {any}
+ */
 function getCanvas() {
   return document.getElementById("canvas");
 }
 
+/**
+ * Funktion finalizeInit.
+ * @returns {any}
+ */
 function finalizeInit() {
   hideScreens();
   document.body.classList.add("is-playing");
@@ -34,15 +54,27 @@ function finalizeInit() {
 }
 
 
+/**
+ * Funktion hideScreens.
+ * @returns {any}
+ */
 function hideScreens() {
     hideElement(document.getElementById("startScreen"));
     hideGameOverScreen();
 }
+/**
+ * Funktion resetGame.
+ * @returns {any}
+ */
 function resetGame() {
     stopCurrentWorld();
     keyboard = new Keyboard();
     window.keyboard = keyboard;
 }
+/**
+ * Funktion stopCurrentWorld.
+ * @returns {any}
+ */
 function stopCurrentWorld() {
     if (world && typeof world.destroy === 'function') {
         world.destroy();
@@ -51,8 +83,8 @@ function stopCurrentWorld() {
     pauseAllSounds();
 }
 /**
- * Applies mobile UI state depending on coarse pointer / touch support.
- * @returns {void}
+ * Funktion adjustControls.
+ * @returns {any}
  */
 function adjustControls() {
   document.body.classList.toggle('is-mobile-ui', isCoarsePointerDevice());
@@ -60,8 +92,8 @@ function adjustControls() {
 }
 
 /**
- * Detects touch/coarse pointer devices reliably (iPad desktop viewport etc.).
- * @returns {boolean}
+ * Funktion isCoarsePointerDevice.
+ * @returns {any}
  */
 function isCoarsePointerDevice() {
   const coarsePointer = window.matchMedia?.('(pointer: coarse)').matches;
@@ -71,18 +103,26 @@ function isCoarsePointerDevice() {
 }
 
 /**
- * Resets inline display style so CSS media queries can control visibility.
- * @returns {void}
+ * Funktion resetMobileControlsInlineStyle.
+ * @returns {any}
  */
 function resetMobileControlsInlineStyle() {
   const mobileControls = document.getElementById('mobileControls');
   if (mobileControls) mobileControls.style.display = '';
 }
+/**
+ * Funktion enableMobileBtn.
+ * @returns {any}
+ */
 function enableMobileBtn() {
     const mobileControls = document.getElementById('mobileControls');
     if (!mobileControls) return;
     mobileControls.addEventListener('contextmenu', (e) => e.preventDefault());
 }
+/**
+ * Funktion playGameMusic.
+ * @returns {any}
+ */
 function playGameMusic() {
     window._gameMusicShouldPlay = true;
     if (typeof SOUNDS.game === "undefined") return;

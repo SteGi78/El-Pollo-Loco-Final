@@ -1,3 +1,15 @@
+/**
+ * Datei: merge/models/background-object.class.js
+ * Beschreibung: Teil des Browser-Spiels „El Pollo Loco“. Enthält Logik, Klassen und/oder Hilfsfunktionen.
+ * Hinweis: Wird im Frontend (HTML/CSS/JavaScript) ausgeführt.
+ * @author Stephan Gilles
+ * @date 03.01.2026
+ */
+
+/**
+ * Klasse BackgroundObject.
+ * @class
+ */
 class BackgroundObject extends DrawableObject {
     width = 720;
     height = 480;
@@ -8,24 +20,9 @@ class BackgroundObject extends DrawableObject {
     }
 
     /**
-     * Draw background tiles in a seam-safe way.
-     *
-     * Why seams happen:
-     * - The background PNGs are large (e.g. 1920x1080) and are scaled down to
-     *   720x480 every frame.
-     * - Some background layers contain transparent pixels on the very left/right
-     *   edge (alpha=0). When two tiles touch, this can reveal the layer below as
-     *   a thin vertical line.
-     *
-     * Fix:
-     * - Crop a few source pixels on the left/right edge (removes transparent
-     *   borders) and slightly overdraw the destination by 1px.
-     */
-    /**
-     * Draws a parallax background tile.
-     * Uses integer-aligned source cropping to reduce seams on scaled canvases.
-     * @param {CanvasRenderingContext2D} ctx
-     * @returns {void}
+     * Methode draw.
+     * @param {any} ctx - Parameter.
+     * @returns {any}
      */
     draw(ctx) {
       const crop = this.getSeamSafeCrop();
@@ -33,8 +30,8 @@ class BackgroundObject extends DrawableObject {
     }
 
     /**
-     * Calculates a seam-safe crop rectangle for the image.
-     * @returns {{sx:number, sy:number, sw:number, sh:number, dx:number, dy:number, dw:number, dh:number}}
+     * Methode getSeamSafeCrop.
+     * @returns {any}
      */
     getSeamSafeCrop() {
       const sx = 0;
@@ -45,10 +42,10 @@ class BackgroundObject extends DrawableObject {
     }
 
     /**
-     * Draws the image using a crop rectangle.
-     * @param {CanvasRenderingContext2D} ctx
-     * @param {{sx:number, sy:number, sw:number, sh:number, dx:number, dy:number, dw:number, dh:number}} crop
-     * @returns {void}
+     * Methode drawCropped.
+     * @param {any} ctx - Parameter.
+     * @param {any} crop - Parameter.
+     * @returns {any}
      */
     drawCropped(ctx, crop) {
       if (!this.img) return;

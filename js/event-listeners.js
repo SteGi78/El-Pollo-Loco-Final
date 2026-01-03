@@ -1,3 +1,15 @@
+/**
+ * Datei: merge/js/event-listeners.js
+ * Beschreibung: Teil des Browser-Spiels „El Pollo Loco“. Enthält Logik, Klassen und/oder Hilfsfunktionen.
+ * Hinweis: Wird im Frontend (HTML/CSS/JavaScript) ausgeführt.
+ * @author Stephan Gilles
+ * @date 03.01.2026
+ */
+
+/**
+ * Funktion ensureKeyboard.
+ * @returns {any}
+ */
 function ensureKeyboard() {
   if (!window.keyboard) {
     window.keyboard = new Keyboard();

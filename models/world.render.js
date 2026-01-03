@@ -1,3 +1,11 @@
+/**
+ * Datei: merge/models/world.render.js
+ * Beschreibung: Teil des Browser-Spiels „El Pollo Loco“. Enthält Logik, Klassen und/oder Hilfsfunktionen.
+ * Hinweis: Wird im Frontend (HTML/CSS/JavaScript) ausgeführt.
+ * @author Stephan Gilles
+ * @date 03.01.2026
+ */
+
 // ============================================================
 //  World Rendering (split)
 // ============================================================
@@ -50,7 +58,6 @@ World.prototype._getSnappedCameraX = function () {
   return (this.cam_x ?? this.camera_x ?? 0) | 0;
 };
 
-;
 
 World.prototype.drawBasicObjs = function () {
     this.addObjsToMap(this.level.backgroundObjects);

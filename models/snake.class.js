@@ -1,3 +1,15 @@
+/**
+ * Datei: merge/models/snake.class.js
+ * Beschreibung: Teil des Browser-Spiels „El Pollo Loco“. Enthält Logik, Klassen und/oder Hilfsfunktionen.
+ * Hinweis: Wird im Frontend (HTML/CSS/JavaScript) ausgeführt.
+ * @author Stephan Gilles
+ * @date 03.01.2026
+ */
+
+/**
+ * Klasse Snake.
+ * @class
+ */
 class Snake extends MoveableObject {
     x = 500 + Math.floor(Math.random() * 4500);
     y = 350;
@@ -34,9 +46,8 @@ class Snake extends MoveableObject {
     }
 
     /**
-     * Steuert Animationen und (falls nötig) Status-Übergänge.
-     * Wichtig: Nach dem Tod darf kein Intervall weiterlaufen, sonst wird
-     * das Dead-Image permanent neu geladen (sichtbar im Network-Tab).
+     * Methode animate.
+     * @returns {any}
      */
     animate() {
         this.runInterval = setInterval(() => {
@@ -53,7 +64,8 @@ class Snake extends MoveableObject {
     }
 
     /**
-     * Räumt alle laufenden Intervalle/Animationen auf.
+     * Methode destructor.
+     * @returns {any}
      */
     destructor() {
         clearInterval(this.runInterval);

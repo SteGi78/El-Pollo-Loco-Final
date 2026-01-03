@@ -1,3 +1,11 @@
+/**
+ * Datei: merge/levels/level1.js
+ * Beschreibung: Teil des Browser-Spiels „El Pollo Loco“. Enthält Logik, Klassen und/oder Hilfsfunktionen.
+ * Hinweis: Wird im Frontend (HTML/CSS/JavaScript) ausgeführt.
+ * @author Stephan Gilles
+ * @date 03.01.2026
+ */
+
 /* global Level, Snake, Chick, Chicken, Cloud, BackgroundObject, Endboss, Bottle, Coin */
 
 let level1;
@@ -42,9 +50,8 @@ const LEVEL1_BOTTLE_COUNT = 23;
 const LEVEL1_CLOUD_COUNT = 5;
 
 /**
- * Initializes Level 1 and stores it in the global variable `level1`.
- * This function is called by the global game init flow.
- * @returns {void}
+ * Funktion initLevel.
+ * @returns {any}
  */
 function initLevel() {
   level1 = new Level(
@@ -58,24 +65,24 @@ function initLevel() {
 }
 
 /**
- * Creates the enemy list for Level 1.
- * @returns {MoveableObject[]}
+ * Funktion createLevel1Enemies.
+ * @returns {any}
  */
 function createLevel1Enemies() {
   return LEVEL1_ENEMY_TYPES.map((EnemyClass) => new EnemyClass());
 }
 
 /**
- * Creates the clouds for Level 1.
- * @returns {Cloud[]}
+ * Funktion createLevel1Clouds.
+ * @returns {any}
  */
 function createLevel1Clouds() {
   return Array.from({ length: LEVEL1_CLOUD_COUNT }, () => new Cloud());
 }
 
 /**
- * Creates all parallax background objects for Level 1.
- * @returns {BackgroundObject[]}
+ * Funktion createLevel1BackgroundObjects.
+ * @returns {any}
  */
 function createLevel1BackgroundObjects() {
   const objects = [];
@@ -86,9 +93,9 @@ function createLevel1BackgroundObjects() {
 }
 
 /**
- * Creates one 4-layer parallax background segment for a given segment index.
- * @param {number} segmentIndex
- * @returns {BackgroundObject[]}
+ * Funktion createBackgroundSegment.
+ * @param {any} segmentIndex - Parameter.
+ * @returns {any}
  */
 function createBackgroundSegment(segmentIndex) {
   const x = segmentIndex * LEVEL_SEGMENT_WIDTH;
@@ -100,33 +107,33 @@ function createBackgroundSegment(segmentIndex) {
 }
 
 /**
- * Returns the layer variant (1 or 2) used by background tiles.
- * @param {number} segmentIndex
- * @returns {number}
+ * Funktion getLayerVariant.
+ * @param {any} segmentIndex - Parameter.
+ * @returns {any}
  */
 function getLayerVariant(segmentIndex) {
   return segmentIndex % 2 === 0 ? 1 : 2;
 }
 
 /**
- * Creates the endboss list for Level 1.
- * @returns {Endboss[]}
+ * Funktion createLevel1Endboss.
+ * @returns {any}
  */
 function createLevel1Endboss() {
   return [new Endboss()];
 }
 
 /**
- * Creates the bottle objects for Level 1.
- * @returns {Bottle[]}
+ * Funktion createLevel1Bottles.
+ * @returns {any}
  */
 function createLevel1Bottles() {
   return Array.from({ length: LEVEL1_BOTTLE_COUNT }, () => new Bottle());
 }
 
 /**
- * Creates the coin objects for Level 1.
- * @returns {Coin[]}
+ * Funktion createLevel1Coins.
+ * @returns {any}
  */
 function createLevel1Coins() {
   return LEVEL1_COIN_POSITIONS.map(([x, y]) => new Coin(x, y));

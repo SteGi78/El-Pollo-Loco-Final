@@ -1,10 +1,15 @@
+/**
+ * Datei: merge/models/endboss.anim.js
+ * Beschreibung: Teil des Browser-Spiels „El Pollo Loco“. Enthält Logik, Klassen und/oder Hilfsfunktionen.
+ * Hinweis: Wird im Frontend (HTML/CSS/JavaScript) ausgeführt.
+ * @author Stephan Gilles
+ * @date 03.01.2026
+ */
+
 // ============================================================
 //  Endboss Animations (prototype split)
 // ============================================================
 
-/**
- * Function to manage the animations and movements.
- */
 Endboss.prototype.animate = function () {
   this._startBossLoop();
   this._startAlertAnimation();
@@ -70,11 +75,7 @@ Endboss.prototype._startBossLoop = function () {
   this.runInterval = setInterval(() => this._tickBoss(), 150);
 };
 
-;
 
-/**
- * Function to handle the walking animation.
- */
 Endboss.prototype.isWalking = function () {
   if (this.animationIntervals) this.stopAnimation();
   if (!this.walkAnimation) {
@@ -82,20 +83,13 @@ Endboss.prototype.isWalking = function () {
   }
 };
 
-/**
- * Function to handle the hurting animation.
- */
 Endboss.prototype.isHurting = function () {
   if (this.hurtAnimation || this.isDead()) return;
   this.cancelAllAnimations();
   this.hurtAnimation = this.playAnimation(this.IMAGES_HURT, 200);
   setTimeout(() => this._finishHurting(), 1200);
 };
-;
 
-/**
- * Function to handle the attacking animation.
- */
 Endboss.prototype.isAttacking = function () {
   if (!this.attackAnimation) {
     this.cancelAllAnimations();
@@ -110,9 +104,6 @@ Endboss.prototype.isAttacking = function () {
   }
 };
 
-/**
- * Function to cancel the attacking animation.
- */
 Endboss.prototype.cancelAttack = function () {
   clearTimeout(this.timeoutId);
   this.timeoutId = setTimeout(() => {
@@ -124,9 +115,6 @@ Endboss.prototype.cancelAttack = function () {
   }, 1800);
 };
 
-/**
- * Function to cancel all animations except death animation.
- */
 Endboss.prototype.cancelAllAnimations = function () {
   this.stopAnimation();
   this.hurtAnimation = this.cancelAnimation(this.hurtAnimation);
@@ -134,9 +122,6 @@ Endboss.prototype.cancelAllAnimations = function () {
   this.attackAnimation = this.cancelAnimation(this.attackAnimation);
 };
 
-/**
- * Function to show death animation.
- */
 Endboss.prototype.endBossDead = function () {
   if (!this.deathAnimation) {
     this.deathAnimation = this.playAnimation(this.IMAGES_DEAD, 150);

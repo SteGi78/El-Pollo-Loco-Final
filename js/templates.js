@@ -1,24 +1,16 @@
 /**
- * Template loader (HTML partials).
- * Loads UI fragments into #ui-root and the rotate notice into #overlay-root / body.
+ * Datei: merge/js/templates.js
+ * Beschreibung: Teil des Browser-Spiels „El Pollo Loco“. Enthält Logik, Klassen und/oder Hilfsfunktionen.
+ * Hinweis: Wird im Frontend (HTML/CSS/JavaScript) ausgeführt.
+ * @author Stephan Gilles
+ * @date 03.01.2026
  */
 
 /**
- * Fetches an HTML template file.
- * @param {string} path
- * @returns {Promise<string>}
- */
-async function fetchHTML(path) {
-  const res = await fetch(path, { cache: "no-store" });
-  if (!res.ok) throw new Error(`Template nicht gefunden: ${path}`);
-  return await res.text();
-}
-
-/**
- * Inserts HTML into a target element using a <template> node.
- * @param {HTMLElement} targetEl
- * @param {string} html
- * @returns {void}
+ * Funktion insertHTML.
+ * @param {any} targetEl - Parameter.
+ * @param {any} html - Parameter.
+ * @returns {any}
  */
 function insertHTML(targetEl, html) {
   const tpl = document.createElement("template");
@@ -26,10 +18,33 @@ function insertHTML(targetEl, html) {
   targetEl.appendChild(tpl.content);
 }
 
+
 /**
- * Loads all templates into the DOM (idempotent).
- * @returns {Promise<void>}
+ * Funktion fillHTML.
+ * @param {any} targetEl - Parameter.
+ * @param {any} html - Parameter.
+ * @returns {any}
  */
+function fillHTML(targetEl, html) {
+  insertHTML(targetEl, html);
+}
+
+
+async function fetchHTML(url) {
+  try {
+    const res = await fetch(url, { cache: "no-store" });
+    if (!res.ok) {
+      console.error(`[templates] Konnte Template nicht laden: ${url} (${res.status})`);
+      return "";
+    }
+    return await res.text();
+  } catch (err) {
+    console.error(`[templates] Fehler beim Laden von: ${url}`, err);
+    return "";
+  }
+}
+
+
 async function loadTemplates() {
   const root = getTemplateRoot();
   if (!root || isAlreadyLoaded(root)) return;
@@ -41,23 +56,25 @@ async function loadTemplates() {
 }
 
 /**
- * @returns {HTMLElement|null}
+ * Funktion getTemplateRoot.
+ * @returns {any}
  */
 function getTemplateRoot() {
   return document.getElementById("ui-root");
 }
 
 /**
- * @returns {HTMLElement}
+ * Funktion getOverlayRoot.
+ * @returns {any}
  */
 function getOverlayRoot() {
   return document.getElementById("overlay-root") || document.body;
 }
 
 /**
- * Marks the root as loaded and prevents duplicate loading.
- * @param {HTMLElement} root
- * @returns {boolean} True if already loaded.
+ * Funktion isAlreadyLoaded.
+ * @param {any} root - Parameter.
+ * @returns {any}
  */
 function isAlreadyLoaded(root) {
   if (root.dataset.loaded === "1") return true;
@@ -65,20 +82,16 @@ function isAlreadyLoaded(root) {
   return false;
 }
 
-/**
- * Loads templates that belong inside the app root.
- * @param {HTMLElement} root
- * @returns {Promise<void>}
- */
 async function loadRootTemplates(root) {
   for (const file of getRootTemplateFiles()) {
     const html = await fetchHTML(file);
-    insertHTML(root, html);
+    fillHTML(root, html);
   }
 }
 
 /**
- * @returns {string[]}
+ * Funktion getRootTemplateFiles.
+ * @returns {any}
  */
 function getRootTemplateFiles() {
   return [
@@ -92,19 +105,14 @@ function getRootTemplateFiles() {
   ];
 }
 
-/**
- * Loads the rotate notice overlay outside of <main>.
- * @param {HTMLElement} overlayRoot
- * @returns {Promise<void>}
- */
 async function loadRotateNotice(overlayRoot) {
   const rotateHTML = await fetchHTML("./templates/rotateNotice.html");
-  insertHTML(overlayRoot, rotateHTML);
+  fillHTML(overlayRoot, rotateHTML);
 }
 
 /**
- * Signals that all templates are present in the DOM.
- * @returns {void}
+ * Funktion notifyTemplatesLoaded.
+ * @returns {any}
  */
 function notifyTemplatesLoaded() {
   window.dispatchEvent(new Event("epl:templates-loaded"));

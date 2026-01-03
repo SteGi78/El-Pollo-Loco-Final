@@ -1,6 +1,9 @@
 /**
- * Simple asset preloader.
- * Keeps a cache of already loaded images to reduce start stutter.
+ * Datei: merge/js/preload.js
+ * Beschreibung: Teil des Browser-Spiels „El Pollo Loco“. Enthält Logik, Klassen und/oder Hilfsfunktionen.
+ * Hinweis: Wird im Frontend (HTML/CSS/JavaScript) ausgeführt.
+ * @author Stephan Gilles
+ * @date 03.01.2026
  */
 
 const imagesToPreload = [
@@ -12,51 +15,58 @@ const imagesToPreload = [
 const preloadedImages = {};
 
 /**
- * Preloads images and calls the callback when finished.
- * @param {Function} [callback]
- * @returns {void}
+ * Funktion preloadImages.
+ * @param {any} callback - Parameter.
+ * @returns {any}
  */
 function preloadImages(callback) {
-  if (!imagesToPreload.length) return safeCallback(callback);
+  let index = 0;
 
-  let loaded = 0;
-  for (const src of imagesToPreload) {
-    preloadSingle(src, () => {
-      loaded += 1;
-      if (loaded === imagesToPreload.length) safeCallback(callback);
-    });
-  }
+  /**
+   * Funktion done.
+   * @returns {any}
+   */
+  const done = () => {
+    index++;
+    if (index >= imagesToPreload.length) return safeCallback(callback);
+    preloadSingle(imagesToPreload[index], done);
+  };
+
+  if (!imagesToPreload.length) return safeCallback(callback);
+  preloadSingle(imagesToPreload[index], done);
 }
 
 /**
- * Preloads a single image.
- * @param {string} src
- * @param {Function} done
- * @returns {void}
+ * Funktion preloadSingle.
+ * @param {any} src - Parameter.
+ * @param {any} done - Parameter.
+ * @returns {any}
  */
 function preloadSingle(src, done) {
+  if (preloadedImages[src]) return done(src, true);
+
   const img = new Image();
-  img.onload = handlePreloadDone.bind(null, src, img, done);
-  img.onerror = handlePreloadDone.bind(null, src, null, done);
+  img.onload = () => handlePreloadDone(src, img, done);
+  img.onerror = () => handlePreloadDone(src, null, done);
   img.src = src;
 }
 
 /**
- * Stores a successfully loaded image and continues the preload chain.
- * @param {string} src
- * @param {HTMLImageElement|null} img
- * @param {Function} done
- * @returns {void}
+ * Funktion handlePreloadDone.
+ * @param {any} src - Parameter.
+ * @param {any} img - Parameter.
+ * @param {any} done - Parameter.
+ * @returns {any}
  */
 function handlePreloadDone(src, img, done) {
   if (img) preloadedImages[src] = img;
-  done();
+  done(src, Boolean(img));
 }
 
 /**
- * Calls a callback only if it is a function.
- * @param {Function} callback
- * @returns {void}
+ * Funktion safeCallback.
+ * @param {any} callback - Parameter.
+ * @returns {any}
  */
 function safeCallback(callback) {
   if (typeof callback === "function") callback();

@@ -1,3 +1,15 @@
+/**
+ * Datei: merge/models/bottle.class.js
+ * Beschreibung: Teil des Browser-Spiels „El Pollo Loco“. Enthält Logik, Klassen und/oder Hilfsfunktionen.
+ * Hinweis: Wird im Frontend (HTML/CSS/JavaScript) ausgeführt.
+ * @author Stephan Gilles
+ * @date 03.01.2026
+ */
+
+/**
+ * Klasse Bottle.
+ * @class
+ */
 class Bottle extends MoveableObject {
     x = 450 + Math.floor(Math.random() * 3950) +  Math.floor(Math.random() * 15 + 6);
     y = 360;

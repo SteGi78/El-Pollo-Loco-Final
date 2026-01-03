@@ -1,14 +1,14 @@
 /**
- * Mobile-/Touch-Steuerung (Buttons)
- *
- * WICHTIG:
- * Die Buttons werden per Template nachgeladen (fetch). Deshalb binden wir die Listener erst,
- * wenn das Event 'epl:templates-loaded' gefeuert wurde.
+ * Datei: merge/js/mobile-controls.js
+ * Beschreibung: Teil des Browser-Spiels „El Pollo Loco“. Enthält Logik, Klassen und/oder Hilfsfunktionen.
+ * Hinweis: Wird im Frontend (HTML/CSS/JavaScript) ausgeführt.
+ * @author Stephan Gilles
+ * @date 03.01.2026
  */
 
 /**
- * Binds mobile controls once (idempotent).
- * @returns {void}
+ * Funktion bindMobileControls.
+ * @returns {any}
  */
 function bindMobileControls() {
   if (window.__eplMobileControlsBound) return;
@@ -21,8 +21,8 @@ function bindMobileControls() {
 }
 
 /**
- * Reads required button elements from the DOM.
- * @returns {{btnLeft: HTMLElement, btnRight: HTMLElement, btnJump: HTMLElement, btnAction: HTMLElement} | null}
+ * Funktion getMobileButtons.
+ * @returns {any}
  */
 function getMobileButtons() {
   const btnLeft = document.getElementById('btnLeft');
@@ -35,9 +35,9 @@ function getMobileButtons() {
 }
 
 /**
- * Binds press interactions for all mobile buttons.
- * @param {{btnLeft: HTMLElement, btnRight: HTMLElement, btnJump: HTMLElement, btnAction: HTMLElement}} buttons
- * @returns {void}
+ * Funktion bindAllButtons.
+ * @param {any} buttons - Parameter.
+ * @returns {any}
  */
 function bindAllButtons(buttons) {
   bindPress(buttons.btnLeft, 'LEFT');
@@ -47,10 +47,10 @@ function bindAllButtons(buttons) {
 }
 
 /**
- * Updates the global keyboard flags.
- * @param {string} propName
- * @param {boolean} value
- * @returns {void}
+ * Funktion setKeyboardFlag.
+ * @param {any} propName - Parameter.
+ * @param {any} value - Parameter.
+ * @returns {any}
  */
 function setKeyboardFlag(propName, value) {
   const kb = window.keyboard;
@@ -62,10 +62,10 @@ function setKeyboardFlag(propName, value) {
 }
 
 /**
- * Binds press (pointer) events to a button element.
- * @param {HTMLElement} button
- * @param {string} keyName
- * @returns {void}
+ * Funktion bindPress.
+ * @param {any} button - Parameter.
+ * @param {any} keyName - Parameter.
+ * @returns {any}
  */
 function bindPress(button, keyName) {
   addPointerListener(button, 'pointerdown', () => setKeyboardFlag(keyName, true));
@@ -76,11 +76,11 @@ function bindPress(button, keyName) {
 }
 
 /**
- * Adds a pointer listener and prevents default browser behavior (touch scrolling etc.).
- * @param {HTMLElement} button
- * @param {string} eventName
- * @param {Function} handler
- * @returns {void}
+ * Funktion addPointerListener.
+ * @param {any} button - Parameter.
+ * @param {any} eventName - Parameter.
+ * @param {any} handler - Parameter.
+ * @returns {any}
  */
 function addPointerListener(button, eventName, handler) {
   button.addEventListener(
@@ -94,9 +94,9 @@ function addPointerListener(button, eventName, handler) {
 }
 
 /**
- * Prevents long-press context menu on mobile.
- * @param {HTMLElement} button
- * @returns {void}
+ * Funktion preventContextMenu.
+ * @param {any} button - Parameter.
+ * @returns {any}
  */
 function preventContextMenu(button) {
   button.addEventListener('contextmenu', (e) => e.preventDefault());

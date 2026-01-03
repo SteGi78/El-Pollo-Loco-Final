@@ -1,14 +1,16 @@
 /**
- * Canvas DPI handling.
- * Keeps logic resolution at 720x480 but scales the backing store for crisp rendering.
+ * Datei: merge/js/dpi.js
+ * Beschreibung: Teil des Browser-Spiels „El Pollo Loco“. Enthält Logik, Klassen und/oder Hilfsfunktionen.
+ * Hinweis: Wird im Frontend (HTML/CSS/JavaScript) ausgeführt.
+ * @author Stephan Gilles
+ * @date 03.01.2026
  */
 
 let currentDpr = 1;
 
 /**
- * Applies the current devicePixelRatio to the canvas backing store.
- * Snaps DPR to an integer to reduce seams on scaled pixel art.
- * @returns {void}
+ * Funktion applyDpi.
+ * @returns {any}
  */
 function applyDpi() {
   const canvas = document.getElementById("canvas");
@@ -23,7 +25,8 @@ function applyDpi() {
 }
 
 /**
- * @returns {number}
+ * Funktion getSnappedDpr.
+ * @returns {any}
  */
 function getSnappedDpr() {
   const dpr = window.devicePixelRatio || 1;
@@ -31,9 +34,10 @@ function getSnappedDpr() {
 }
 
 /**
- * @param {HTMLCanvasElement} canvas
- * @param {number} dpr
- * @returns {void}
+ * Funktion resizeCanvasForDpr.
+ * @param {any} canvas - Parameter.
+ * @param {any} dpr - Parameter.
+ * @returns {any}
  */
 function resizeCanvasForDpr(canvas, dpr) {
   canvas.width = 720 * dpr;
@@ -41,9 +45,10 @@ function resizeCanvasForDpr(canvas, dpr) {
 }
 
 /**
- * @param {HTMLCanvasElement} canvas
- * @param {number} dpr
- * @returns {void}
+ * Funktion applyCanvasTransform.
+ * @param {any} canvas - Parameter.
+ * @param {any} dpr - Parameter.
+ * @returns {any}
  */
 function applyCanvasTransform(canvas, dpr) {
   const ctx = canvas.getContext("2d");

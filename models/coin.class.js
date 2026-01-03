@@ -1,3 +1,15 @@
+/**
+ * Datei: merge/models/coin.class.js
+ * Beschreibung: Teil des Browser-Spiels „El Pollo Loco“. Enthält Logik, Klassen und/oder Hilfsfunktionen.
+ * Hinweis: Wird im Frontend (HTML/CSS/JavaScript) ausgeführt.
+ * @author Stephan Gilles
+ * @date 03.01.2026
+ */
+
+/**
+ * Klasse Coin.
+ * @class
+ */
 class Coin extends MoveableObject {
     width = 100;
     height = 100;
@@ -24,14 +36,16 @@ class Coin extends MoveableObject {
     }
 
     /**
-     * Function to manage the animation.
+     * Methode animate.
+     * @returns {any}
      */
     animate() {
         this.animationIntervals = this.playAnimation(this.IMAGES_COIN, 200);
     }
 
     /**
-     * Function to clear the running animation.
+     * Methode destructor.
+     * @returns {any}
      */
     destructor() {
         clearInterval(this.animationIntervals);

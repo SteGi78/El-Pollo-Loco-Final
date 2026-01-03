@@ -1,6 +1,9 @@
 /**
- * Delegated UI actions (data-action buttons).
- * Keeps handlers short and avoids long switch blocks.
+ * Datei: merge/js/ui-actions.js
+ * Beschreibung: Teil des Browser-Spiels „El Pollo Loco“. Enthält Logik, Klassen und/oder Hilfsfunktionen.
+ * Hinweis: Wird im Frontend (HTML/CSS/JavaScript) ausgeführt.
+ * @author Stephan Gilles
+ * @date 03.01.2026
  */
 
 document.addEventListener("click", handleActionClick);
@@ -19,9 +22,9 @@ const ACTION_HANDLERS = {
 };
 
 /**
- * Handles clicks on elements with a data-action attribute.
- * @param {MouseEvent} e
- * @returns {void}
+ * Funktion handleActionClick.
+ * @param {any} e - Parameter.
+ * @returns {any}
  */
 function handleActionClick(e) {
   const action = getActionFromEvent(e);
@@ -30,9 +33,9 @@ function handleActionClick(e) {
 }
 
 /**
- * Extracts the action string from an event target.
- * @param {Event} e
- * @returns {string|null}
+ * Funktion getActionFromEvent.
+ * @param {any} e - Parameter.
+ * @returns {any}
  */
 function getActionFromEvent(e) {
   const btn = e.target.closest("[data-action]");
@@ -40,9 +43,9 @@ function getActionFromEvent(e) {
 }
 
 /**
- * Runs the matching action handler.
- * @param {string} action
- * @returns {void}
+ * Funktion runAction.
+ * @param {any} action - Parameter.
+ * @returns {any}
  */
 function runAction(action) {
   const fn = ACTION_HANDLERS[action];
@@ -50,9 +53,9 @@ function runAction(action) {
 }
 
 /**
- * Starts the game also via tapping/clicking on the canvas while the start screen is visible.
- * @param {PointerEvent} e
- * @returns {void}
+ * Funktion handleCanvasPointerDown.
+ * @param {any} e - Parameter.
+ * @returns {any}
  */
 function handleCanvasPointerDown(e) {
   if (e.target?.id !== "canvas") return;
@@ -61,34 +64,34 @@ function handleCanvasPointerDown(e) {
 }
 
 /**
- * Opens a <dialog> by id (if supported).
- * @param {string} id
- * @returns {void}
+ * Funktion openDialog.
+ * @param {any} id - Parameter.
+ * @returns {any}
  */
 function openDialog(id) {
   document.getElementById(id)?.showModal?.();
 }
 
 /**
- * Closes a <dialog> by id (if supported).
- * @param {string} id
- * @returns {void}
+ * Funktion closeDialog.
+ * @param {any} id - Parameter.
+ * @returns {any}
  */
 function closeDialog(id) {
   document.getElementById(id)?.close?.();
 }
 
 /**
- * Toggles fullscreen using the global helper if present.
- * @returns {void}
+ * Funktion runFullscreenToggle.
+ * @returns {any}
  */
 function runFullscreenToggle() {
   if (typeof window.toggleFullscreen === "function") window.toggleFullscreen();
 }
 
 /**
- * Opens the legal dialog.
- * @returns {void}
+ * Funktion openLegal.
+ * @returns {any}
  */
 function openLegal() {
   const dlg = document.getElementById("legalDialog");
@@ -97,8 +100,8 @@ function openLegal() {
 }
 
 /**
- * Closes the legal dialog.
- * @returns {void}
+ * Funktion closeLegal.
+ * @returns {any}
  */
 function closeLegal() {
   const dlg = document.getElementById("legalDialog");

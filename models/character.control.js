@@ -1,10 +1,15 @@
+/**
+ * Datei: merge/models/character.control.js
+ * Beschreibung: Teil des Browser-Spiels „El Pollo Loco“. Enthält Logik, Klassen und/oder Hilfsfunktionen.
+ * Hinweis: Wird im Frontend (HTML/CSS/JavaScript) ausgeführt.
+ * @author Stephan Gilles
+ * @date 03.01.2026
+ */
+
 // ============================================================
 //  Character Controls / Movement / Status
 // ============================================================
 
-/**
- * Function to control keyboard events, character y-position and camera x-position.
- */
 Character.prototype.runControl = function () {
   this.runInterval = setInterval(() => this._tickControl(), 1000 / 60);
 };
@@ -59,11 +64,7 @@ Character.prototype._tickControl = function () {
   this.positionCameraX();
 };
 
-;
 
-/**
- * Function to check character y-position after jump.
- */
 Character.prototype.isAfterJump = function () {
   if (this.isAboveGround()) {
     this.afterJump = true;
@@ -72,10 +73,6 @@ Character.prototype.isAfterJump = function () {
   }
 };
 
-/**
- * Function to handle the move right or left of the character.
- * @param {boolean} right - The value is true, then move right, otherwise move left.
- */
 Character.prototype.isWalking = function (right) {
   playSound('walk');
   if (right) {
@@ -85,17 +82,11 @@ Character.prototype.isWalking = function (right) {
   }
 };
 
-/**
- * Function represents the jump action.
- */
 Character.prototype.jump = function () {
   this.speedY = 20;
   this.y = this.speedY;
 };
 
-/**
- * Function to handle the jumping when the character is not above ground.
- */
 Character.prototype.isJumping = function () {
   if (!this.isAboveGround()) {
     playSound('jump');
@@ -103,18 +94,11 @@ Character.prototype.isJumping = function () {
   }
 };
 
-/**
- * Function to manage the hits that the character is taking.
- */
 Character.prototype.takingHit = function () {
   if (!this.gettingHit) return this._startHitStun();
   this._maybeEndHitStun();
 };
-;
 
-/**
- * Function to manage camera position.
- */
 Character.prototype.positionCameraX = function () {
   if (this.world.level.endboss[0].x > this.x - 350 && !this.endBossEscaping) {
     this.world.cam_x = -this.x + 100;
@@ -124,9 +108,6 @@ Character.prototype.positionCameraX = function () {
   }
 };
 
-/**
- * Function to update status bar according to character's energy.
- */
 Character.prototype.updateStatusBar = function () {
   let percentage = (this.energy > 0 && this.energy < 30) ? 30 : this.energy;
   this.world.statusBar.setPercentage(percentage);

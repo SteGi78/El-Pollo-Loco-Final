@@ -1,3 +1,15 @@
+/**
+ * Datei: merge/models/cloud.class.js
+ * Beschreibung: Teil des Browser-Spiels „El Pollo Loco“. Enthält Logik, Klassen und/oder Hilfsfunktionen.
+ * Hinweis: Wird im Frontend (HTML/CSS/JavaScript) ausgeführt.
+ * @author Stephan Gilles
+ * @date 03.01.2026
+ */
+
+/**
+ * Klasse Cloud.
+ * @class
+ */
 class Cloud extends MoveableObject {
     y = 10;
     width = 800;
@@ -11,7 +23,8 @@ class Cloud extends MoveableObject {
     }
 
     /**
-     * Function to manage the movements.
+     * Methode animate.
+     * @returns {any}
      */
     animate() {
         this.animationIntervals = setInterval(()=> {
@@ -22,15 +35,16 @@ class Cloud extends MoveableObject {
      }
 
      /**
-     * Function to select dinamically between both types of clouds.
-     * @returns {number} - The value is 1 or 2.
-     */
+      * Methode randomCloud.
+      * @returns {any}
+      */
      randomCloud() {
         return Math.floor(Math.random()*2 + 1);
     }
 
     /**
-     * Function to clear the running animation.
+     * Methode destructor.
+     * @returns {any}
      */
     destructor() {
         clearInterval(this.animationIntervals);

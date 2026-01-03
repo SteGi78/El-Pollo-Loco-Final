@@ -1,13 +1,16 @@
 /**
- * Hilfsfunktionen für Game Flow
- * - restartGame(): Neustart ohne kompletten Seiten-Reload
- * - returnToMenu(): zurück zum Startbildschirm
- *
- * Voraussetzung:
- * - Es gibt eine globale init() Funktion, die ein neues Spiel startet.
- * - world / game state wird in init() neu aufgebaut.
+ * Datei: merge/js/game-helpers.js
+ * Beschreibung: Teil des Browser-Spiels „El Pollo Loco“. Enthält Logik, Klassen und/oder Hilfsfunktionen.
+ * Hinweis: Wird im Frontend (HTML/CSS/JavaScript) ausgeführt.
+ * @author Stephan Gilles
+ * @date 03.01.2026
  */
 
+/**
+ * Funktion hideElement.
+ * @param {any} el - Parameter.
+ * @returns {any}
+ */
 function hideElement(el) {
   if (!el) return;
   setInert(el, true);
@@ -17,6 +20,11 @@ function hideElement(el) {
   el.style.display = 'none';
 }
 
+/**
+ * Funktion showElementGrid.
+ * @param {any} el - Parameter.
+ * @returns {any}
+ */
 function showElementGrid(el) {
   if (!el) return;
   setInert(el, false);
@@ -26,9 +34,8 @@ function showElementGrid(el) {
 }
 
 /**
- * Spiel neu starten
- * - blendet Game Over Screen aus
- * - ruft init() erneut auf, um eine neue World zu erzeugen
+ * Funktion restartGame.
+ * @returns {any}
  */
 function restartGame() {
   const over = document.getElementById('gameOverScreen');
@@ -42,14 +49,8 @@ function restartGame() {
 }
 
 /**
- * Zurück ins Hauptmenü
- * - blendet Game Over aus
- * - blendet StartScreen ein
- * - optional kann hier Musik neu gestartet werden etc.
- */
-/**
- * Stops the current run and returns to the start screen.
- * @returns {void}
+ * Funktion returnToMenu.
+ * @returns {any}
  */
 function returnToMenu() {
   hideElement(document.getElementById('gameOverScreen'));
@@ -61,8 +62,9 @@ function returnToMenu() {
 }
 
 /**
- * Entfernt Fokus, falls er innerhalb eines ausgeblendeten Elements liegt.
- * @param {HTMLElement} el
+ * Funktion blurIfContainsActiveElement.
+ * @param {any} el - Parameter.
+ * @returns {any}
  */
 function blurIfContainsActiveElement(el) {
   const active = document.activeElement;
@@ -72,9 +74,10 @@ function blurIfContainsActiveElement(el) {
 }
 
 /**
- * Setzt inert-Status, damit versteckte Overlays nicht fokussierbar sind.
- * @param {HTMLElement} el
- * @param {boolean} value
+ * Funktion setInert.
+ * @param {any} el - Parameter.
+ * @param {any} value - Parameter.
+ * @returns {any}
  */
 function setInert(el, value) {
   if (!el) return;

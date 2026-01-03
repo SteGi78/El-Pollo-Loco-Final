@@ -1,24 +1,23 @@
+/**
+ * Datei: merge/models/endboss.state.js
+ * Beschreibung: Teil des Browser-Spiels „El Pollo Loco“. Enthält Logik, Klassen und/oder Hilfsfunktionen.
+ * Hinweis: Wird im Frontend (HTML/CSS/JavaScript) ausgeführt.
+ * @author Stephan Gilles
+ * @date 03.01.2026
+ */
+
 // ============================================================
 //  Endboss State / Logic (prototype split)
 // ============================================================
 
-/**
- * Function to pause the end boss when it is colliding.
- */
 Endboss.prototype.collisionPause = function () {
   this.speed = 0;
 };
 
-/**
- * Function to restore the end boss after collision pause.
- */
 Endboss.prototype.restoreSpeed = function () {
   this.speed = 20 + this.booster;
 };
 
-/**
- * Function to handle the death conditions & animation.
- */
 Endboss.prototype.runDeathConditions = function () {
   this.speed = 0;
   this.cancelAllAnimations();
@@ -26,18 +25,12 @@ Endboss.prototype.runDeathConditions = function () {
   this.endBossDead();
 };
 
-/**
- * Function to handle the hurting conditions & animation.
- */
 Endboss.prototype.runHurtConditions = function () {
   this.updateStatusBar();
   this.lastEnergy = this.energy;
   this.isHurting();
 };
 
-/**
- * Function to handle the intro conditions & animation.
- */
 Endboss.prototype.runIntroConditions = function () {
   playSound('bossIntro');
   setTimeout(() => {
@@ -46,28 +39,16 @@ Endboss.prototype.runIntroConditions = function () {
   }, 1500);
 };
 
-/**
- * Function to check if end boss got a new hit.
- * @returns {boolean} - The value is true when energy is reduced.
- */
 Endboss.prototype.newHit = function () {
   return this.energy !== this.lastEnergy;
 };
 
-/**
- * Function to update status bar according to end boss's energy.
- */
 Endboss.prototype.updateStatusBar = function () {
   let percentage = (this.energy > 0 && this.energy < 30) ? 30 : this.energy;
   this.world.endBossBar.setPercentage(percentage);
 };
 
 
-/**
- * Endboss takes damage in "2-bottle steps":
- * - every bottle still counts as a hit (hurt animation / sound)
- * - energy is reduced only on every 2nd bottle hit (=> bar drops in 20% steps)
- */
 Endboss.prototype.hit = function () {
   this.hurtSound();
   if (this._bottleHits == null) this._bottleHits = 0;
@@ -76,4 +57,3 @@ Endboss.prototype.hit = function () {
   if (this._bottleHits % 2 !== 0) return;
   this.energy = Math.max(0, this.energy - 20);
 };
-;

@@ -1,8 +1,15 @@
-function getAvailableStatusbarValue(val) {
-  const available = [0, 20, 40, 60, 80, 100];
-  return Math.max(...available.filter(v => v <= val));
-}
+/**
+ * Datei: merge/models/character.class.js
+ * Beschreibung: Teil des Browser-Spiels „El Pollo Loco“. Enthält Logik, Klassen und/oder Hilfsfunktionen.
+ * Hinweis: Wird im Frontend (HTML/CSS/JavaScript) ausgeführt.
+ * @author Stephan Gilles
+ * @date 03.01.2026
+ */
 
+/**
+ * Klasse Character.
+ * @class
+ */
 class Character extends MoveableObject {
   x = 20;
   y = 10;
@@ -90,9 +97,6 @@ class Character extends MoveableObject {
     "img/2_character_pepe/5_dead/D-57.png"
   ];
 
-  /**
-   * @param {*} world
-   */
   constructor(world) {
     super().loadImage('img/2_character_pepe/1_idle/idle/I-1.png');
     this.loadAllCharacterImages();
@@ -102,8 +106,8 @@ class Character extends MoveableObject {
   }
 
   /**
-   * Loads all animation image sets for the character.
-   * @returns {void}
+   * Methode loadAllCharacterImages.
+   * @returns {any}
    */
   loadAllCharacterImages() {
     const sets = [
@@ -118,7 +122,8 @@ class Character extends MoveableObject {
   }
 
   /**
-   * Function to clear all running animations.
+   * Methode destructor.
+   * @returns {any}
    */
   destructor() {
     clearInterval(this.runInterval);

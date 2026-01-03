@@ -1,3 +1,15 @@
+/**
+ * Datei: merge/models/throwable-object.class.js
+ * Beschreibung: Teil des Browser-Spiels „El Pollo Loco“. Enthält Logik, Klassen und/oder Hilfsfunktionen.
+ * Hinweis: Wird im Frontend (HTML/CSS/JavaScript) ausgeführt.
+ * @author Stephan Gilles
+ * @date 03.01.2026
+ */
+
+/**
+ * Klasse ThrowableObject.
+ * @class
+ */
 class ThrowableObject extends MoveableObject {
     width = 80;
     height = 70;
@@ -40,18 +52,9 @@ class ThrowableObject extends MoveableObject {
     }
 
     /**
-     * Function to throw the object to the left or to the right.
-     * @param {boolean} otherDirection - The value is true if the character is moving left.
-     */
-    /**
-     * Throws the bottle and starts its movement/animation loop.
-     * @param {boolean} otherDirection - True if the character is facing left.
-     * @returns {void}
-     */
-    /**
-     * Throws the bottle and starts its movement/animation loop.
-     * @param {boolean} otherDirection - True if the character is facing left.
-     * @returns {void}
+     * Methode throw.
+     * @param {any} otherDirection - Parameter.
+     * @returns {any}
      */
     throw(otherDirection) {
         this.speedY = 30;
@@ -62,8 +65,8 @@ class ThrowableObject extends MoveableObject {
     }
 
     /**
-     * Starts the throw interval (idempotent).
-     * @returns {void}
+     * Methode startThrowInterval.
+     * @returns {any}
      */
     startThrowInterval() {
         if (this.throwInterval) clearInterval(this.throwInterval);
@@ -71,28 +74,8 @@ class ThrowableObject extends MoveableObject {
     }
 
     /**
-     * One throw tick: move until splashed, then play splash animation.
-     * @returns {void}
-     */
-    throwTick() {
-        if (this.isSplashed) return this.animateSplash();
-        this.playAnimation(this.IMAGES_ROTATION);
-        if (this.throwingOtherDirection) return this.moveLeft();
-        this.moveRight();
-    }
-
-    /**
-     * Starts the throw interval (idempotent).
-     * @returns {void}
-     */
-    startThrowInterval() {
-        if (this.throwInterval) clearInterval(this.throwInterval);
-        this.throwInterval = setInterval(this.throwTick.bind(this), 60);
-    }
-
-    /**
-     * One throw tick: move until splashed, then play splash animation.
-     * @returns {void}
+     * Methode throwTick.
+     * @returns {any}
      */
     throwTick() {
         if (this.isSplashed) return this.animateSplash();
@@ -101,25 +84,33 @@ class ThrowableObject extends MoveableObject {
     }
 
     /**
-     * Function to manage the rotation animation.
+     * Methode animate.
+     * @returns {any}
      */
     animate() {
         this.animationIntervals = this.playAnimation(this.IMAGES_ROTATION, 50);
     }
 
      /**
-     * Function to manage the splash animation.
-     */
-    animateSplash() {
+      * Methode animateSplash.
+      * @returns {any}
+      */
+     animateSplash() {
         this.stopAnimation();
         this.animationIntervals = this.playAnimation(this.IMAGES_SPLASH, 25);
     }
 
     /**
-     * Function to clear all running animations.
+     * Methode destructor.
+     * @returns {any}
      */
     destructor() {
         clearInterval(this.animationIntervals);
+        /**
+         * Methode if.
+         * @param {any} this.throwInterval - Parameter.
+         * @returns {any}
+         */
         if (this.throwInterval) {
             clearInterval(this.throwInterval);
             this.throwInterval = null;

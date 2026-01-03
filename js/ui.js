@@ -1,7 +1,15 @@
 /**
- * Shows the Game Over overlay and announces the result for screen readers.
- * @param {boolean} win - True if the player won.
- * @returns {void}
+ * Datei: merge/js/ui.js
+ * Beschreibung: Teil des Browser-Spiels „El Pollo Loco“. Enthält Logik, Klassen und/oder Hilfsfunktionen.
+ * Hinweis: Wird im Frontend (HTML/CSS/JavaScript) ausgeführt.
+ * @author Stephan Gilles
+ * @date 03.01.2026
+ */
+
+/**
+ * Funktion showGameOverScreen.
+ * @param {any} win - Parameter.
+ * @returns {any}
  */
 function showGameOverScreen(win = false) {
   const els = getGameOverElements();
@@ -13,8 +21,8 @@ function showGameOverScreen(win = false) {
 }
 
 /**
- * Hides the Game Over overlay.
- * @returns {void}
+ * Funktion hideGameOverScreen.
+ * @returns {any}
  */
 function hideGameOverScreen() {
   const els = getGameOverElements();
@@ -25,8 +33,8 @@ function hideGameOverScreen() {
 }
 
 /**
- * Reads DOM elements used by the Game Over overlay.
- * @returns {{overlay: HTMLElement|null, sr: HTMLElement|null, messageEl: HTMLElement|null}}
+ * Funktion getGameOverElements.
+ * @returns {any}
  */
 function getGameOverElements() {
   return {
@@ -37,10 +45,10 @@ function getGameOverElements() {
 }
 
 /**
- * Updates the visible Game Over message.
- * @param {HTMLElement|null} messageEl
- * @param {boolean} win
- * @returns {void}
+ * Funktion setGameOverMessage.
+ * @param {any} messageEl - Parameter.
+ * @param {any} win - Parameter.
+ * @returns {any}
  */
 function setGameOverMessage(messageEl, win) {
   if (!messageEl) return;
@@ -48,9 +56,9 @@ function setGameOverMessage(messageEl, win) {
 }
 
 /**
- * Shows an overlay in a robust and accessible way.
- * @param {HTMLElement} overlay
- * @returns {void}
+ * Funktion showOverlay.
+ * @param {any} overlay - Parameter.
+ * @returns {any}
  */
 function showOverlay(overlay) {
   overlay.style.display = 'grid';
@@ -60,9 +68,9 @@ function showOverlay(overlay) {
 }
 
 /**
- * Hides an overlay in a robust and accessible way.
- * @param {HTMLElement} overlay
- * @returns {void}
+ * Funktion hideOverlay.
+ * @param {any} overlay - Parameter.
+ * @returns {any}
  */
 function hideOverlay(overlay) {
   overlay.style.display = 'none';
@@ -72,10 +80,10 @@ function hideOverlay(overlay) {
 }
 
 /**
- * Sets or removes inert on an overlay (if available).
- * @param {HTMLElement} overlay
- * @param {boolean} value
- * @returns {void}
+ * Funktion setOverlayInert.
+ * @param {any} overlay - Parameter.
+ * @param {any} value - Parameter.
+ * @returns {any}
  */
 function setOverlayInert(overlay, value) {
   if (typeof setInert === 'function') {
@@ -87,10 +95,10 @@ function setOverlayInert(overlay, value) {
 }
 
 /**
- * Announces the Game Over status for screen readers.
- * @param {HTMLElement|null} sr
- * @param {boolean} win
- * @returns {void}
+ * Funktion announceGameOver.
+ * @param {any} sr - Parameter.
+ * @param {any} win - Parameter.
+ * @returns {any}
  */
 function announceGameOver(sr, win) {
   if (!sr) return;
@@ -98,9 +106,9 @@ function announceGameOver(sr, win) {
 }
 
 /**
- * Clears the screen-reader status line.
- * @param {HTMLElement|null} sr
- * @returns {void}
+ * Funktion clearSrStatus.
+ * @param {any} sr - Parameter.
+ * @returns {any}
  */
 function clearSrStatus(sr) {
   if (sr) sr.textContent = '';
@@ -108,8 +116,8 @@ function clearSrStatus(sr) {
 
 
 /**
- * Wires the instructions dialog (close on backdrop / ESC).
- * @returns {void}
+ * Funktion setupInstructionsDialog.
+ * @returns {any}
  */
 function setupInstructionsDialog() {
   const dialog = document.getElementById('instructionsDialog');
@@ -119,29 +127,28 @@ function setupInstructionsDialog() {
 }
 
 /**
- * Closes a dialog when the backdrop is clicked.
- * @param {HTMLDialogElement} dialog
- * @param {MouseEvent} event
- * @returns {void}
+ * Funktion onDialogBackdropClick.
+ * @param {any} dialog - Parameter.
+ * @param {any} event - Parameter.
+ * @returns {any}
  */
 function onDialogBackdropClick(dialog, event) {
   if (event.target === dialog) dialog.close();
 }
 
 /**
- * Closes a dialog on ESC key.
- * @param {HTMLDialogElement} dialog
- * @param {KeyboardEvent} event
- * @returns {void}
+ * Funktion onDialogEscape.
+ * @param {any} dialog - Parameter.
+ * @param {any} event - Parameter.
+ * @returns {any}
  */
 function onDialogEscape(dialog, event) {
   if (event.key === 'Escape' && dialog.open) dialog.close();
 }
 
 /**
- * Toggles browser fullscreen mode.
- * Uses main/#app/documentElement as fullscreen host to preserve 3:2 letterboxing.
- * @returns {Promise<void>|void}
+ * Funktion toggleFullscreen.
+ * @returns {any}
  */
 function toggleFullscreen() {
   const target = getFullscreenHost();
@@ -150,7 +157,8 @@ function toggleFullscreen() {
 }
 
 /**
- * @returns {HTMLElement}
+ * Funktion getFullscreenHost.
+ * @returns {any}
  */
 function getFullscreenHost() {
   return document.querySelector('main')
@@ -159,23 +167,25 @@ function getFullscreenHost() {
 }
 
 /**
- * @param {HTMLElement} target
- * @returns {Promise<void>|void}
+ * Funktion requestFullscreen.
+ * @param {any} target - Parameter.
+ * @returns {any}
  */
 function requestFullscreen(target) {
   if (target?.requestFullscreen) return target.requestFullscreen();
 }
 
 /**
- * @returns {Promise<void>|void}
+ * Funktion exitFullscreen.
+ * @returns {any}
  */
 function exitFullscreen() {
   if (document.exitFullscreen) return document.exitFullscreen();
 }
 
 /**
- * Binds the fullscreen toggle button (idempotent).
- * @returns {void}
+ * Funktion bindFullscreenButton.
+ * @returns {any}
  */
 function bindFullscreenButton() {
   const btn = document.getElementById('fullscreenBtn');
@@ -186,9 +196,9 @@ function bindFullscreenButton() {
 }
 
 /**
- * Fullscreen button click handler.
- * @param {MouseEvent} event
- * @returns {void}
+ * Funktion handleFullscreenButtonClick.
+ * @param {any} event - Parameter.
+ * @returns {any}
  */
 function handleFullscreenButtonClick(event) {
   event.stopPropagation();
@@ -197,6 +207,10 @@ function handleFullscreenButtonClick(event) {
     .finally(updateFullscreenButtonState);
 }
 
+/**
+ * Funktion updateFullscreenButtonState.
+ * @returns {any}
+ */
 function updateFullscreenButtonState() {
   const btn = document.getElementById('fullscreenBtn');
   if (!btn) return;
@@ -207,9 +221,8 @@ function updateFullscreenButtonState() {
 }
 
 /**
- * Locks the UI to landscape on small portrait screens.
- * Shows the rotate notice and hides the main game area.
- * @returns {void}
+ * Funktion updateOrientationLock.
+ * @returns {any}
  */
 function updateOrientationLock() {
   const { rotateNotice, main } = getOrientationLockElements();
@@ -223,7 +236,8 @@ function updateOrientationLock() {
 }
 
 /**
- * @returns {{rotateNotice: HTMLElement|null, main: HTMLElement|null}}
+ * Funktion getOrientationLockElements.
+ * @returns {any}
  */
 function getOrientationLockElements() {
   return {
@@ -233,7 +247,8 @@ function getOrientationLockElements() {
 }
 
 /**
- * @returns {boolean}
+ * Funktion shouldLockToLandscape.
+ * @returns {any}
  */
 function shouldLockToLandscape() {
   const portrait = window.matchMedia('(orientation: portrait)').matches;
@@ -242,9 +257,10 @@ function shouldLockToLandscape() {
 }
 
 /**
- * @param {HTMLElement} rotateNotice
- * @param {HTMLElement} main
- * @returns {void}
+ * Funktion applyOrientationLock.
+ * @param {any} rotateNotice - Parameter.
+ * @param {any} main - Parameter.
+ * @returns {any}
  */
 function applyOrientationLock(rotateNotice, main) {
   document.body.classList.add('is-portrait-lock');
@@ -256,9 +272,10 @@ function applyOrientationLock(rotateNotice, main) {
 }
 
 /**
- * @param {HTMLElement} rotateNotice
- * @param {HTMLElement} main
- * @returns {void}
+ * Funktion clearOrientationLock.
+ * @param {any} rotateNotice - Parameter.
+ * @param {any} main - Parameter.
+ * @returns {any}
  */
 function clearOrientationLock(rotateNotice, main) {
   document.body.classList.remove('is-portrait-lock');
@@ -267,16 +284,18 @@ function clearOrientationLock(rotateNotice, main) {
 }
 
 /**
- * @param {HTMLElement} el
- * @returns {void}
+ * Funktion ensureFocusable.
+ * @param {any} el - Parameter.
+ * @returns {any}
  */
 function ensureFocusable(el) {
   if (!el.hasAttribute('tabindex')) el.setAttribute('tabindex', '-1');
 }
 
 /**
- * @param {HTMLElement} el
- * @returns {void}
+ * Funktion showRotateNotice.
+ * @param {any} el - Parameter.
+ * @returns {any}
  */
 function showRotateNotice(el) {
   el.hidden = false;
@@ -285,8 +304,9 @@ function showRotateNotice(el) {
 }
 
 /**
- * @param {HTMLElement} el
- * @returns {void}
+ * Funktion hideRotateNotice.
+ * @param {any} el - Parameter.
+ * @returns {any}
  */
 function hideRotateNotice(el) {
   el.hidden = true;
@@ -295,8 +315,9 @@ function hideRotateNotice(el) {
 }
 
 /**
- * @param {HTMLElement} main
- * @returns {void}
+ * Funktion hideMainForOrientationLock.
+ * @param {any} main - Parameter.
+ * @returns {any}
  */
 function hideMainForOrientationLock(main) {
   main.setAttribute('aria-hidden', 'true');
@@ -305,8 +326,9 @@ function hideMainForOrientationLock(main) {
 }
 
 /**
- * @param {HTMLElement} main
- * @returns {void}
+ * Funktion showMainAfterOrientationLock.
+ * @param {any} main - Parameter.
+ * @returns {any}
  */
 function showMainAfterOrientationLock(main) {
   main.setAttribute('aria-hidden', 'false');
@@ -314,6 +336,10 @@ function showMainAfterOrientationLock(main) {
   main.style.display = '';
 }
 
+/**
+ * Funktion setupLegalDialog.
+ * @returns {any}
+ */
 function setupLegalDialog() {
   const dlg = document.getElementById('legalDialog');
   if (!dlg) return;
@@ -329,6 +355,10 @@ function setupLegalDialog() {
   });
 }
 
+/**
+ * Funktion initUIBindings.
+ * @returns {any}
+ */
 function initUIBindings() {
   setupInstructionsDialog();
   setupLegalDialog();

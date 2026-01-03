@@ -1,3 +1,11 @@
+/**
+ * Datei: merge/models/world.collision.js
+ * Beschreibung: Teil des Browser-Spiels „El Pollo Loco“. Enthält Logik, Klassen und/oder Hilfsfunktionen.
+ * Hinweis: Wird im Frontend (HTML/CSS/JavaScript) ausgeführt.
+ * @author Stephan Gilles
+ * @date 03.01.2026
+ */
+
 // ============================================================
 //  World Collisions & Combat (split)
 // ============================================================
@@ -95,7 +103,6 @@ World.prototype._stopEnemy = function (enemy) {
   if (enemy && typeof enemy.destructor === "function") enemy.destructor();
 };
 
-;
 
 World.prototype.checkCollisionsWithEndboss = function () {
     let endBoss = this.level.endboss[0];
@@ -110,7 +117,6 @@ World.prototype.checkCollisionsWithEndboss = function () {
 World.prototype.checkBottleCollided = function () {
   for (const bottle of this.throwableObjects) this._checkBottleCollision(bottle);
 };
-;
 
 World.prototype.shatterBottle = function (bottle) {
     bottle.isSplashed = true;
@@ -138,7 +144,6 @@ World.prototype.checkDeathsAfterCollision = function () {
   if (this._handleCharacterDeathAfterCollision()) return;
   if (this.level.enemies.length > 0) this.checkEnemiesDeaths();
 };
-;
 
 World.prototype.checkEnemiesDeaths = function () {
     for (const enemy of this.level.enemies) {

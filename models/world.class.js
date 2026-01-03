@@ -1,18 +1,14 @@
-function getAvailableStatusbarValue(val) {
-    const available = [0, 20, 40, 60, 80, 100];
-    return Math.max(...available.filter(v => v <= val));
-}
+/**
+ * Datei: merge/models/world.class.js
+ * Beschreibung: Teil des Browser-Spiels „El Pollo Loco“. Enthält Logik, Klassen und/oder Hilfsfunktionen.
+ * Hinweis: Wird im Frontend (HTML/CSS/JavaScript) ausgeführt.
+ * @author Stephan Gilles
+ * @date 03.01.2026
+ */
 
 /**
- * World (Split)
- *
- * Diese Datei enthält bewusst nur das Klassen-Skeleton + Constructor + shared helper.
- * Logik ist ausgelagert:
- *  - models/world.render.js
- *  - models/world.collision.js
- *  - models/world.loop.js
- *  - models/world.collect.js
- *  - models/world.lifecycle.js
+ * Klasse World.
+ * @class
  */
 class World {
     ctx;
@@ -55,21 +51,16 @@ class World {
         this.run();
     }
 
+
     /**
-     * Helper: Map count (0..max) to StatusBar percentage (0/20/40/60/80/100).
-     * Workaround: StatusBar.updateStatusBar nutzt '>' statt '>='.
-     * Daher geben wir für 20/40/60/80 jeweils minimal > Wert zurück.
-     * @param {number} count
-     * @param {number} max
-     * @returns {number}
+     * Methode _barPercentFromCount.
+     * @param {any} count - Parameter.
+     * @param {any} max - Parameter.
+     * @returns {any}
      */
     _barPercentFromCount(count, max) {
-        const clamped = Math.max(0, Math.min(count, max));
-        const steps = [0, 20, 40, 60, 80, 100];
-        const idx = Math.round((clamped / max) * 5);
-        const val = steps[Math.max(0, Math.min(5, idx))];
-
-        if (val === 0 || val === 100) return val;
-        return val + 0.001;
+        const m = Math.max(1, Number(max) || 1);
+        const c = Math.max(0, Math.min(Number(count) || 0, m));
+        return (c / m) * 100;
     }
 }

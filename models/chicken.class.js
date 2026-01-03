@@ -1,3 +1,15 @@
+/**
+ * Datei: merge/models/chicken.class.js
+ * Beschreibung: Teil des Browser-Spiels „El Pollo Loco“. Enthält Logik, Klassen und/oder Hilfsfunktionen.
+ * Hinweis: Wird im Frontend (HTML/CSS/JavaScript) ausgeführt.
+ * @author Stephan Gilles
+ * @date 03.01.2026
+ */
+
+/**
+ * Klasse Chicken.
+ * @class
+ */
 class Chicken extends MoveableObject {
     x = 500 + Math.floor(Math.random() * 4500);
     y = 350;
@@ -29,7 +41,8 @@ class Chicken extends MoveableObject {
     }
 
     /**
-     * Function to manage the animations and movements.
+     * Methode animate.
+     * @returns {any}
      */
     animate() {
         this.runInterval = setInterval(() => {
@@ -46,7 +59,8 @@ class Chicken extends MoveableObject {
     }
     
     /**
-     * Function to clear all running animations.
+     * Methode destructor.
+     * @returns {any}
      */
     destructor() {
         clearInterval(this.runInterval);

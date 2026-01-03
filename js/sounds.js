@@ -1,9 +1,9 @@
 /**
- * Sound- und Mute-Handling für El Pollo Loco
- * - Global muten / entmuten
- * - UI-Button (🔈 / 🔇) aktualisieren
- * - Mute-Status in localStorage persistieren
- * - Alle bekannten Sounds zentral verwalten (SOUNDS.*)
+ * Datei: merge/js/sounds.js
+ * Beschreibung: Teil des Browser-Spiels „El Pollo Loco“. Enthält Logik, Klassen und/oder Hilfsfunktionen.
+ * Hinweis: Wird im Frontend (HTML/CSS/JavaScript) ausgeführt.
+ * @author Stephan Gilles
+ * @date 03.01.2026
  */
 
 // Globale Mute-Flag
@@ -37,7 +37,8 @@ const ALL_SOUNDS = [];
 const SOUNDS = {};
 
 /**
- * Erstellt Audio-Objekte aus der Konfiguration.
+ * Funktion buildSounds.
+ * @returns {any}
  */
 function buildSounds() {
   Object.entries(SOUND_CONFIG).forEach(([key, cfg]) => {
@@ -54,9 +55,9 @@ function buildSounds() {
 buildSounds();
 
 /**
- * Ermittelt ein Audio-Objekt aus String-Key oder direkter Übergabe.
- * @param {string|HTMLAudioElement} soundRef
- * @returns {HTMLAudioElement|null}
+ * Funktion resolveSound.
+ * @param {any} soundRef - Parameter.
+ * @returns {any}
  */
 function resolveSound(soundRef) {
   if (!soundRef) return null;
@@ -70,7 +71,8 @@ function resolveSound(soundRef) {
 }
 
 /**
- * Wendet den aktuellen Mute-Status auf alle bekannten Sounds an.
+ * Funktion applyMuteStateToAllSounds.
+ * @returns {any}
  */
 function applyMuteStateToAllSounds() {
   ALL_SOUNDS.forEach(snd => {
@@ -86,17 +88,11 @@ function applyMuteStateToAllSounds() {
 }
 
 /**
- * Spielt einen Sound ab (falls nicht gemutet).
- * @param {string|HTMLAudioElement} soundRef
- * @param {boolean} force - Bei true wird trotz Mute abgespielt.
- * @param {number} delayMs - Optionaler Delay in ms.
- */
-/**
- * Plays a sound by reference.
- * @param {string|HTMLAudioElement} soundRef
- * @param {boolean} [force=false] - Ignores global mute if true.
- * @param {number} [delayMs=0] - Optional delay before playback.
- * @returns {void}
+ * Funktion playSound.
+ * @param {any} soundRef - Parameter.
+ * @param {any} force - Parameter.
+ * @param {any} delayMs - Parameter.
+ * @returns {any}
  */
 function playSound(soundRef, force = false, delayMs = 0) {
   const audio = resolveSound(soundRef);
@@ -110,10 +106,10 @@ function playSound(soundRef, force = false, delayMs = 0) {
 }
 
 /**
- * Executes the actual playback after resolving mute/volume state.
- * @param {HTMLAudioElement} audio
- * @param {boolean} force
- * @returns {void}
+ * Funktion playResolvedAudio.
+ * @param {any} audio - Parameter.
+ * @param {any} force - Parameter.
+ * @returns {any}
  */
 function playResolvedAudio(audio, force) {
   if (!force && isMuted) return muteAudio(audio);
@@ -122,9 +118,9 @@ function playResolvedAudio(audio, force) {
 }
 
 /**
- * Prepares an audio element for clean playback.
- * @param {HTMLAudioElement} audio
- * @returns {void}
+ * Funktion prepareAudioForPlayback.
+ * @param {any} audio - Parameter.
+ * @returns {any}
  */
 function prepareAudioForPlayback(audio) {
   audio.currentTime = 0;
@@ -133,9 +129,9 @@ function prepareAudioForPlayback(audio) {
 }
 
 /**
- * Mutes an audio element immediately.
- * @param {HTMLAudioElement} audio
- * @returns {void}
+ * Funktion muteAudio.
+ * @param {any} audio - Parameter.
+ * @returns {any}
  */
 function muteAudio(audio) {
   audio.pause();
@@ -144,17 +140,18 @@ function muteAudio(audio) {
 }
 
 /**
- * Reads the base volume stored on the audio element.
- * @param {HTMLAudioElement} audio
- * @returns {number}
+ * Funktion getBaseVolume.
+ * @param {any} audio - Parameter.
+ * @returns {any}
  */
 function getBaseVolume(audio) {
   return parseFloat(audio.dataset.baseVolume ?? 1);
 }
 
 /**
- * Pausiert alle Sounds (optional mit Reset der Zeit).
- * @param {boolean} resetTime
+ * Funktion pauseAllSounds.
+ * @param {any} resetTime - Parameter.
+ * @returns {any}
  */
 function pauseAllSounds(resetTime = false) {
   ALL_SOUNDS.forEach(snd => {
@@ -166,7 +163,8 @@ function pauseAllSounds(resetTime = false) {
 }
 
 /**
- * Aktualisiert das Icon und aria-label am Button.
+ * Funktion updateMuteButtonUI.
+ * @returns {any}
  */
 function updateMuteButtonUI() {
   const btn = document.getElementById('muteBtn');
@@ -181,12 +179,8 @@ function updateMuteButtonUI() {
 }
 
 /**
- * Schaltet den globalen Sound an/aus.
- * Speichert außerdem den Zustand in localStorage.
- */
-/**
- * Toggles global mute and persists the state.
- * @returns {void}
+ * Funktion toggleMute.
+ * @returns {any}
  */
 function toggleMute() {
   rememberGameMusicStateBeforeMute();
@@ -198,8 +192,8 @@ function toggleMute() {
 }
 
 /**
- * Remembers if game music was playing right before muting.
- * @returns {void}
+ * Funktion rememberGameMusicStateBeforeMute.
+ * @returns {any}
  */
 function rememberGameMusicStateBeforeMute() {
   if (isMuted) return;
@@ -208,16 +202,16 @@ function rememberGameMusicStateBeforeMute() {
 }
 
 /**
- * Saves the mute state to localStorage.
- * @returns {void}
+ * Funktion saveMuteStateToStorage.
+ * @returns {any}
  */
 function saveMuteStateToStorage() {
   localStorage.setItem('muted', isMuted ? '1' : '0');
 }
 
 /**
- * Resumes game music after unmuting, if it should be playing.
- * @returns {void}
+ * Funktion resumeGameMusicAfterUnmute.
+ * @returns {any}
  */
 function resumeGameMusicAfterUnmute() {
   if (isMuted) return;
@@ -229,8 +223,8 @@ function resumeGameMusicAfterUnmute() {
 }
 
 /**
- * Liest den gespeicherten Mute-Zustand aus localStorage und
- * synchronisiert UI + Audio.
+ * Funktion initMuteStateFromStorage.
+ * @returns {any}
  */
 function initMuteStateFromStorage() {
   const saved = localStorage.getItem('muted');

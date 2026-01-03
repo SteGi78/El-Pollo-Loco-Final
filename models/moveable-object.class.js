@@ -1,3 +1,15 @@
+/**
+ * Datei: merge/models/moveable-object.class.js
+ * Beschreibung: Teil des Browser-Spiels „El Pollo Loco“. Enthält Logik, Klassen und/oder Hilfsfunktionen.
+ * Hinweis: Wird im Frontend (HTML/CSS/JavaScript) ausgeführt.
+ * @author Stephan Gilles
+ * @date 03.01.2026
+ */
+
+/**
+ * Klasse MoveableObject.
+ * @class
+ */
 class MoveableObject extends DrawableObject {
     x = 50;
     y = 200;
@@ -13,28 +25,25 @@ class MoveableObject extends DrawableObject {
     lastHit = 0;
 
     /**
-     * Function to apply gravity to the moveable object.
+     * Methode applyGravity.
+     * @returns {any}
      */
-  /**
-   * Starts the gravity loop for this object (25 FPS).
-   * @returns {void}
-   */
-  applyGravity() {
+    applyGravity() {
     this.clearGravityInterval();
     this.gravityInterval = setInterval(this.gravityTick.bind(this), 1000 / 25);
   }
 
   /**
-   * Clears an existing gravity interval.
-   * @returns {void}
+   * Methode clearGravityInterval.
+   * @returns {any}
    */
   clearGravityInterval() {
     if (this.gravityInterval) clearInterval(this.gravityInterval);
   }
 
   /**
-   * One gravity tick.
-   * @returns {void}
+   * Methode gravityTick.
+   * @returns {any}
    */
   gravityTick() {
     if (this instanceof ThrowableObject) return this.isBottleSplashed();
@@ -48,12 +57,23 @@ class MoveableObject extends DrawableObject {
   }
 
     /**
-     * Function to check if bottle is splashed.
+     * Methode isBottleSplashed.
+     * @returns {any}
      */
     isBottleSplashed() {
+        /**
+         * Methode if.
+         * @param {any} !this.isSplashed - Parameter.
+         * @returns {any}
+         */
         if (!this.isSplashed) {
             this.y -= this.speedY;
             this.speedY -= this.acceleration;
+            /**
+             * Methode if.
+             * @param {any} this.y > - Parameter.
+             * @returns {any}
+             */
             if(this.y >= 375){
                 this.isSplashed = true;
                 this.y = 375;
@@ -62,19 +82,19 @@ class MoveableObject extends DrawableObject {
     }
 
     /**
-     * Function to check if object is not on the ground.
-     * @returns {boolean} - The value is true when object is not on the ground.
+     * Methode isAboveGround.
+     * @returns {any}
      */
     isAboveGround() {
         return this.y < 180;
     }
 
     /**
-     * Function to handle the object animation according to its parameters.
-     * @param {Array} arr - The array of images to be animated.
-     * @param {number} fps - The frames per second, the interval wished.
-     * @param {boolean} moveLeft - The value is true, when the movement to left is wished during animation.
-     * @returns {interval} - The interval of the animation
+     * Methode playAnimation.
+     * @param {any} arr - Parameter.
+     * @param {any} fps - Parameter.
+     * @param {any} moveLeft - Parameter.
+     * @returns {any}
      */
     playAnimation(arr, fps, moveLeft = false) {
         const intervalTime = (fps) ? fps : 1000 / 10; 
@@ -92,9 +112,9 @@ class MoveableObject extends DrawableObject {
     }
 
     /**
-     * Function to cancel the animation by clearing its interval.
-     * @param {interval} intervalId - The animation interval.
-     * @returns {null} - null
+     * Methode cancelAnimation.
+     * @param {any} intervalId - Parameter.
+     * @returns {any}
      */
     cancelAnimation(intervalId) {
         clearInterval(intervalId);
@@ -102,38 +122,50 @@ class MoveableObject extends DrawableObject {
     }
 
     /**
-     * Function to stop the animation by clearing the intervals on the variable animationIntervals.
+     * Methode stopGravity.
+     * @returns {any}
      */
     stopGravity() {
+        /**
+         * Methode if.
+         * @param {any} this.gravityInterval - Parameter.
+         * @returns {any}
+         */
         if (this.gravityInterval) {
             clearInterval(this.gravityInterval);
             this.gravityInterval = null;
         }
     }
 
+    /**
+     * Methode stopAnimation.
+     * @returns {any}
+     */
     stopAnimation() {
         clearInterval(this.animationIntervals);
         this.animationIntervals = null;
     }
 
     /**
-     * Function to move the object to the right.
+     * Methode moveRight.
+     * @returns {any}
      */
     moveRight() {
         this.x += this.speed;
     }
 
     /**
-     * Function to move the object to the left.
+     * Methode moveLeft.
+     * @returns {any}
      */
     moveLeft() {
         this.x -= this.speed;
     }
 
     /**
-     * Function to check the collision of the object with another object.
-     * @param {MoveableObject} mo - The object that is colliding.
-     * @returns {boolean} - The value is true when is colliding.
+     * Methode isColliding.
+     * @param {any} mo - Parameter.
+     * @returns {any}
      */
     isColliding(mo) {
         return this.x + this.width - this.offset.right > mo.x + mo.offset.left &&
@@ -143,11 +175,17 @@ class MoveableObject extends DrawableObject {
     }
 
     /**
-     * Function to reduce object's energy after a hit and play hurt sound.
+     * Methode hit.
+     * @returns {any}
      */
     hit() {
         this.hurtSound();
         this.energy -= 10;
+        /**
+         * Methode if.
+         * @param {any} this.energy < - Parameter.
+         * @returns {any}
+         */
         if (this.energy <= 0) {
             this.energy = 0;
         } else {
@@ -156,9 +194,15 @@ class MoveableObject extends DrawableObject {
     }
 
     /**
-     * Function to manage the hurt sounds according with its instance.
+     * Methode hurtSound.
+     * @returns {any}
      */
     hurtSound(){
+        /**
+         * Methode if.
+         * @param {any} this instanceof Character - Parameter.
+         * @returns {any}
+         */
         if(this instanceof Character) {
             if (!this.isDead())
                 playSound('hurt');
@@ -172,8 +216,8 @@ class MoveableObject extends DrawableObject {
     }
 
     /**
-     * Function to control the hits that the object is getting according to the last hit gotten.
-     * @returns {boolean} - The value is true if hurt.
+     * Methode isHurt.
+     * @returns {any}
      */
     isHurt() {
         let timePassed = new Date().getTime() - this.lastHit;
@@ -182,8 +226,8 @@ class MoveableObject extends DrawableObject {
     }
 
     /**
-     * Function to check whether the object lost all energy.
-     * @returns {boolean} - The value is true when energy <= 0.
+     * Methode isDead.
+     * @returns {any}
      */
     isDead() {
         return this.energy <= 0;

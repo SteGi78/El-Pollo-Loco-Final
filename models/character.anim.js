@@ -1,12 +1,15 @@
+/**
+ * Datei: merge/models/character.anim.js
+ * Beschreibung: Teil des Browser-Spiels „El Pollo Loco“. Enthält Logik, Klassen und/oder Hilfsfunktionen.
+ * Hinweis: Wird im Frontend (HTML/CSS/JavaScript) ausgeführt.
+ * @author Stephan Gilles
+ * @date 03.01.2026
+ */
+
 // ============================================================
 //  Character Animations (prototype split)
 // ============================================================
 
-/**
- * Function to manage the animations.
- * WICHTIG: Jump-Animation läuft, solange der Charakter in der Luft ist
- * (nicht nur solange die Taste gedrückt wird).
- */
 Character.prototype.animate = function () {
   this.runControl();
   this._animState = "idle";
@@ -78,13 +81,7 @@ Character.prototype._tickAnimation = function () {
   this._playAnimState(nextState);
 };
 
-;
 
-/**
- * Function represents the sequence of images to be animated.
- * @param {Array} arr - The array of images to be animated.
- * @param {boolean} idle - The value must be true when the idle animation is wished.
- */
 Character.prototype.playAnimation = function (arr, idle) {
   arr = this.isLongIdle(this.currentImage, arr, idle);
   let i = this.currentImage % arr.length;
@@ -93,13 +90,6 @@ Character.prototype.playAnimation = function (arr, idle) {
   this.currentImage++;
 };
 
-/**
- * Function to control the long idle animation.
- * @param {number} currentImage - The current image of the array
- * @param {Array} arr - The array of images to be animated.
- * @param {boolean} idle - The value must be true when the idle animation is wished.
- * @returns {Array} - The array of images.
- */
 Character.prototype.isLongIdle = function (currentImage, arr, idle) {
   if (this._shouldCancelLongIdle(idle)) return this._resetLongIdle(arr);
   this._startIdleIfNeeded();
@@ -107,11 +97,7 @@ Character.prototype.isLongIdle = function (currentImage, arr, idle) {
   this.longIdle = false;
   return arr;
 };
-;
 
-/**
- * Function to play the character's death animation.
- */
 Character.prototype.playDeathAnimation = function () {
   this.speed = 0;
   this.deathAnimation = this.playAnimation(this.IMAGES_DEAD);
